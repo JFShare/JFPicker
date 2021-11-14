@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.Jfpicker.wheelpicker.wheelview.WheelView
+        android:id="@+id/wheelViewYear"
+        style="@style/defaultFIOSWheel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:wheelGravity="center" />
+
+    <TextView
+        android:id="@+id/tvYearLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text=""
+        android:visibility="visible" />
+
+    <com.Jfpicker.wheelpicker.wheelview.WheelView
+        android:id="@+id/wheelViewMonth"
+        style="@style/defaultFIOSWheel"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        app:wheelGravity="center" />
+
+
+    <TextView
+        android:id="@+id/tvMonthLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text=""
+        android:visibility="visible" />
+
+    <com.Jfpicker.wheelpicker.wheelview.WheelView
+        android:id="@+id/wheelViewDay"
+        style="@style/defaultFIOSWheel"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        app:wheelGravity="center" />
+
+    <TextView
+        android:id="@+id/tvDayLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text=""
+        android:visibility="visible" />
+
+</LinearLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".HistorySearchActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/etContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/black">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/purple_200"
+                android:text="添加">
+
+            </Button>
+
+            <com.Jfpicker.flexbox.hsearch.TaoBaoHSearchLayout
+                android:id="@+id/taobaoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </com.Jfpicker.flexbox.hsearch.TaoBaoHSearchLayout>
+
+            <com.Jfpicker.flexbox.hsearch.ZhiHuHSearchLayout
+                android:id="@+id/zhihuLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </com.Jfpicker.flexbox.hsearch.ZhiHuHSearchLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_footer_style_1.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_footer_style_2.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_footer_style_3.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_header_style_1.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_header_style_2.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_header_style_3.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/dialog_header_style_default.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/wheel_picker_date.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/wheel_picker_datime.xml" value="0.3181818181818182" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/WheelPicker/src/main/res/layout/wheel_picker_time.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/app/src/main/res/layout/activity_android_pick.xml" value="0.33" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/app/src/main/res/layout/activity_date_pick.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/app/src/main/res/layout/activity_history_search.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/app/src/main/res/layout/activity_main.xml" value="0.23351648351648352" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/app/src/main/res/layout/activity_picker.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/drawable/delete_history.xml" value="0.3578125" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/drawable/drawable.xml" value="0.3578125" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/drawable/see_hot_record.xml" value="0.3578125" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/drawable/shape_item_history.xml" value="0.3578125" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/item_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/item_history_loadmore.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/item_zhihu_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/taobao_history_reocrd_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/taobao_history_title_layout.xml" value="0.33" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/taobao_hotsearch_record_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/taobao_hotsearch_title_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/taobao_item_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/tv_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_history_title_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_hot_item_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_hotsearch_title_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_item_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/dialog_header_style_default.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_date.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_datime.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_linkage.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_option.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_time.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/app/src/main/res/layout/activity_adress_pick.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/app/src/main/res/layout/activity_date_pick.xml" value="0.25280898876404495" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/app/src/main/res/layout/activity_main.xml" value="0.3328125" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/app/src/main/res/layout/activity_option_pick.xml" value="0.31614583333333335" />
+        <entry key="..\:/Android_thirdProgrect/Jffastdevelop/app/src/main/res/layout/activity_picker.xml" value="0.15041782729805014" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

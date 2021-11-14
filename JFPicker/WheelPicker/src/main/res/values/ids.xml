@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dialog_modal_title" type="id"></item>
+    <item name="dialog_modal_cancel" type="id"></item>
+    <item name="dialog_modal_ok" type="id"></item>
+</resources>

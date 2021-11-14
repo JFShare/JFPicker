@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".PickerActivity">
+
+    <Button
+        android:id="@+id/btnDate"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/purple_200"
+        android:text="时间选择器">
+
+    </Button>
+
+    <Button
+        android:id="@+id/btnOption"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/purple_200"
+        android:text="选项选择器">
+
+    </Button>
+
+    <Button
+        android:id="@+id/btnAdress"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/purple_200"
+        android:text="地址选择器">
+
+    </Button>
+</LinearLayout>

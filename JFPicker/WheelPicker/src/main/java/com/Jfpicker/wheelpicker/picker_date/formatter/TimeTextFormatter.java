@@ -1,8 +1,8 @@
 package com.Jfpicker.wheelpicker.picker_date.formatter;
 
 /**
- * @author Created by JF on  2021/11/12 15:15
- * @description
+ * @author Created by JF on  2021/11/12
+ * @description 时分秒添加后缀文字
  */
 
 public class TimeTextFormatter extends TimeFillZeroFormatter {

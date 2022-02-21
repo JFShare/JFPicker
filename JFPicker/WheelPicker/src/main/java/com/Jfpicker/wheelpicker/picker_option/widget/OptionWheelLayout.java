@@ -20,8 +20,8 @@ import com.Jfpicker.wheelpicker.wheelview.WheelView;
 import java.util.List;
 
 /**
- * @author Created by JF on  2021/11/13 8:32
- * @description
+ * @author Created by JF on  2021/11/13
+ * @description 单选布局，数据是OptionEntity的列表
  */
 
 public class OptionWheelLayout extends LinearLayout {
@@ -66,6 +66,7 @@ public class OptionWheelLayout extends LinearLayout {
         setFormatter(formatter);
     }
 
+    //设置数据
     public void setWheelData(List<OptionEntity> list) {
 
         indexOptionChooose = -1;
@@ -87,6 +88,7 @@ public class OptionWheelLayout extends LinearLayout {
         wheelOption.setAdapter(adapterOption);
     }
 
+    //根据id设置选中的数据
     public void setChooseId(String chooseId) {
         if (!TextUtils.isEmpty(chooseId)) {
             if (adapterOption != null) {

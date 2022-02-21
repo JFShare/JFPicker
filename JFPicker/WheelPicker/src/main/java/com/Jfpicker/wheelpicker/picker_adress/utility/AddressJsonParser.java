@@ -7,9 +7,8 @@ import androidx.annotation.NonNull;
 
 
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressParser;
-import com.Jfpicker.wheelpicker.picker_adress.entity.CityEntity;
-import com.Jfpicker.wheelpicker.picker_adress.entity.CountyEntity;
-import com.Jfpicker.wheelpicker.picker_adress.entity.ProvinceEntity;
+
+import com.Jfpicker.wheelpicker.picker_adress.entity.AddressItemEntity;
 import com.Jfpicker.wheelpicker.wheel_dialog.DialogLog;
 
 import org.json.JSONArray;
@@ -18,7 +17,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 使用了AndroidPicker的地址加载代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 public class AddressJsonParser implements AddressParser {
     private final Builder builder;
 
@@ -32,7 +34,7 @@ public class AddressJsonParser implements AddressParser {
 
     @NonNull
     @Override
-    public List<ProvinceEntity> parseData(@NonNull String text) {
+    public List<AddressItemEntity> parseData(@NonNull String text) {
         try {
             JSONArray provinceArray = new JSONArray(text);
             return parseProvince(provinceArray);
@@ -42,14 +44,14 @@ public class AddressJsonParser implements AddressParser {
         return new ArrayList<>();
     }
 
-    private List<ProvinceEntity> parseProvince(JSONArray provinceArray) {
-        List<ProvinceEntity> data = new ArrayList<>();
+    private List<AddressItemEntity> parseProvince(JSONArray provinceArray) {
+        List<AddressItemEntity> data = new ArrayList<>();
         for (int i = 0, x = provinceArray.length(); i < x; i++) {
-            ProvinceEntity provinceEntity = new ProvinceEntity();
+            AddressItemEntity provinceEntity = new AddressItemEntity();
             JSONObject provinceObject = provinceArray.optJSONObject(i);
             provinceEntity.setCode(provinceObject.optString(builder.provinceCodeField));
             provinceEntity.setName(provinceObject.optString(builder.provinceNameField));
-            provinceEntity.setCityList(new ArrayList<>());
+            provinceEntity.setNextList(new ArrayList<>());
             JSONArray cityArray = provinceObject.optJSONArray(builder.provinceChildField);
             parseCity(provinceEntity, cityArray);
             data.add(provinceEntity);
@@ -57,34 +59,34 @@ public class AddressJsonParser implements AddressParser {
         return data;
     }
 
-    private void parseCity(ProvinceEntity provinceEntity, JSONArray cityArray) {
+    private void parseCity(AddressItemEntity provinceEntity, JSONArray cityArray) {
         //台湾的第二级可能没数据
         if (cityArray == null || cityArray.length() == 0) {
             return;
         }
         for (int j = 0, y = cityArray.length(); j < y; j++) {
-            CityEntity cityEntity = new CityEntity();
+            AddressItemEntity cityEntity = new AddressItemEntity();
             JSONObject cityObject = cityArray.optJSONObject(j);
             cityEntity.setCode(cityObject.optString(builder.cityCodeField));
             cityEntity.setName(cityObject.optString(builder.cityNameField));
-            cityEntity.setCountyList(new ArrayList<>());
-            provinceEntity.getCityList().add(cityEntity);
+            cityEntity.setNextList(new ArrayList<>());
+            provinceEntity.getNextList().add(cityEntity);
             JSONArray countyArray = cityObject.optJSONArray(builder.cityChildField);
             parseCounty(cityEntity, countyArray);
         }
     }
 
-    private void parseCounty(CityEntity cityEntity, JSONArray countyArray) {
+    private void parseCounty(AddressItemEntity cityEntity, JSONArray countyArray) {
         //港澳台的第三级可能没数据
         if (countyArray == null || countyArray.length() == 0) {
             return;
         }
         for (int k = 0, z = countyArray.length(); k < z; k++) {
-            CountyEntity countyEntity = new CountyEntity();
+            AddressItemEntity countyEntity = new AddressItemEntity();
             JSONObject countyObject = countyArray.optJSONObject(k);
             countyEntity.setCode(countyObject.optString(builder.countyCodeField));
             countyEntity.setName(countyObject.optString(builder.countyNameField));
-            cityEntity.getCountyList().add(countyEntity);
+            cityEntity.getNextList().add(countyEntity);
         }
     }
 

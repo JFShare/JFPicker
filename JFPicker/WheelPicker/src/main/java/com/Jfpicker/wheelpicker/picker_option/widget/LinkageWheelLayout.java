@@ -1,4 +1,3 @@
-
 package com.Jfpicker.wheelpicker.picker_option.widget;
 
 import android.content.Context;
@@ -15,7 +14,11 @@ import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
 import com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider;
 import com.Jfpicker.wheelpicker.wheelview.WheelView;
 
-
+/**
+ * 三级联动的滚动选择布局
+ * 参考了AndroidPicker的LinkageWheelLayout代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 @SuppressWarnings("unused")
 public class LinkageWheelLayout extends LinearLayout {
     private WheelView wheelViewFirst, wheelViewSecond, wheelViewThird;
@@ -106,6 +109,7 @@ public class LinkageWheelLayout extends LinearLayout {
     }
 
 
+    //设置数据源
     public void setData(@NonNull LinkageProvider provider) {
         setFirstVisible(provider.firstLevelVisible());
         setThirdVisible(provider.thirdLevelVisible());
@@ -124,6 +128,7 @@ public class LinkageWheelLayout extends LinearLayout {
         changeThirdData();
     }
 
+    //设置默认数据
     public void setDefaultValue(Object first, Object second, Object third) {
         if (dataProvider != null) {
             firstIndex = dataProvider.findFirstIndex(first);
@@ -138,6 +143,7 @@ public class LinkageWheelLayout extends LinearLayout {
             this.thirdValue = third;
         }
     }
+
     public void setFormatter(WheelFormatter formatter) {
         wheelViewFirst.setFormatter(formatter);
         wheelViewSecond.setFormatter(formatter);
@@ -186,6 +192,7 @@ public class LinkageWheelLayout extends LinearLayout {
     }
 
 
+    //修改第一级数据
     private void changeFirstData() {
         adapterFirst = new WheelDataAdapter();
         adapterFirst.strs.clear();
@@ -194,6 +201,7 @@ public class LinkageWheelLayout extends LinearLayout {
         wheelViewFirst.setCurrentItem(firstIndex);
     }
 
+    //修改第二级数据
     private void changeSecondData() {
         adapterSecond = new WheelDataAdapter();
         adapterSecond.strs.clear();
@@ -203,6 +211,7 @@ public class LinkageWheelLayout extends LinearLayout {
         wheelViewSecond.setCurrentItem(secondIndex);
     }
 
+    //修改第三级数据
     private void changeThirdData() {
         if (!dataProvider.thirdLevelVisible()) {
             return;

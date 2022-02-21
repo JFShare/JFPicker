@@ -2,19 +2,28 @@ package com.Jfpicker.wheelpicker.wheel_dialog;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.Dimension;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
-import com.Jfpicker.wheelpicker.R;
 
+import com.Jfpicker.wheelpicker.R;
+import com.Jfpicker.wheelpicker.utils.DensityUtils;
+
+/**
+ * 使用了AndroidPicker的Dialog代码，根据自身的需求做了相应的修改
+ * 主要修改：DefaultDialogConfig定义全局的弹窗样式。通过构造方法传入 DialogConfig，定义私有的弹窗样式。
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 @SuppressWarnings("unused")
 public abstract class ModalDialog extends BottomDialog implements View.OnClickListener {
     protected View headerView;
@@ -25,14 +34,37 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
     protected View bodyView;
     protected View footerView;
 
+
     public ModalDialog(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public ModalDialog(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig, ((dialogConfig != null && dialogConfig.getDialogStyle() == DialogStyle.center) ||
+                (dialogConfig == null && DefaultDialogConfig.getDialogStyle() == DialogStyle.center))
+                ? R.style.DialogTheme_Fade : R.style.DialogTheme_Sheet);
     }
 
     public ModalDialog(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
     }
 
+    @Override
+    public void onInit(@Nullable Bundle savedInstanceState) {
+        super.onInit(savedInstanceState);
+        if (dialogConfig != null && dialogConfig.getDialogStyle() == DialogStyle.center) {
+            setGravity(Gravity.CENTER);
+            if (dialogConfig.getDialogBackground() != null) {
+                setWidth((int) (activity.getResources().getDisplayMetrics().widthPixels * dialogConfig.getDialogBackground().getDialogWidthP()));
+            } else {
+                setWidth((int) (activity.getResources().getDisplayMetrics().widthPixels * DefaultDialogConfig.getDialogBackground().getDialogWidthP()));
+            }
+        } else if ((dialogConfig == null && DefaultDialogConfig.getDialogStyle() == DialogStyle.center)) {
+            setWidth((int) (activity.getResources().getDisplayMetrics().widthPixels * DefaultDialogConfig.getDialogBackground().getDialogWidthP()));
+            setGravity(Gravity.CENTER);
+        }
+
+    }
 
     @NonNull
     @Override
@@ -76,9 +108,10 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
     @Nullable
     protected View createTopLineView() {
         View view = new View(activity);
-        view.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT,
-                (int) (1 * activity.getResources().getDisplayMetrics().density)));
-        view.setBackgroundColor(getContext().getResources().getColor(R.color.deviderColor));
+        view.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, 1));
+        int topLineColor = (dialogConfig != null && dialogConfig.getDialogColor() != null) ?
+                dialogConfig.getDialogColor().topLineColor() : DefaultDialogConfig.getDialogColor().topLineColor();
+        view.setBackgroundColor(topLineColor);
         return view;
     }
 
@@ -87,9 +120,7 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
 
     @Nullable
     protected View createFooterView() {
-
         return null;
-
     }
 
     @CallSuper
@@ -97,21 +128,70 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
     protected void initView() {
         super.initView();
 
-        cancelView = contentView.findViewById(R.id.dialog_modal_cancel);
-        if (cancelView == null) {
-            throw new IllegalArgumentException("Cancel view id not found");
+        int contentBackgroundColor;
+        int connerStyle;
+        int connerRadius;
+        if (dialogConfig != null && dialogConfig.getDialogBackground() != null) {
+            contentBackgroundColor = dialogConfig.getDialogBackground().getContentBackgroundColor();
+        } else {
+            contentBackgroundColor = DefaultDialogConfig.getDialogBackground().getContentBackgroundColor();
         }
-        titleView = contentView.findViewById(R.id.dialog_modal_title);
-        if (titleView == null) {
-            throw new IllegalArgumentException("Title view id not found");
+        if (dialogConfig != null && dialogConfig.getDialogBackground() != null) {
+            connerStyle = dialogConfig.getDialogBackground().getDialogCornerRound();
+        } else {
+            connerStyle = DefaultDialogConfig.getDialogBackground().getDialogCornerRound();
         }
-        okView = contentView.findViewById(R.id.dialog_modal_ok);
-        if (okView == null) {
-            throw new IllegalArgumentException("Ok view id not found");
+        if (dialogConfig != null && dialogConfig.getDialogBackground() != null) {
+            connerRadius = dialogConfig.getDialogBackground().getCornerRadius();
+        } else {
+            connerRadius = DefaultDialogConfig.getDialogBackground().getCornerRadius();
+        }
+        switch (connerStyle) {
+            case CornerRound.No:
+            case CornerRound.Top:
+            case CornerRound.All:
+                setBackgroundColor(connerStyle, connerRadius, contentBackgroundColor);
+                break;
+            default:
+                setBackgroundColor(CornerRound.No, connerRadius, contentBackgroundColor);
+                break;
         }
 
-        cancelView.setOnClickListener(this);
-        okView.setOnClickListener(this);
+        cancelView = contentView.findViewById(R.id.dialog_modal_cancel);
+
+        if (cancelView != null) {
+            int cancelTextColor;
+            if (dialogConfig != null && dialogConfig.getDialogColor() != null) {
+                cancelTextColor = dialogConfig.getDialogColor().cancelTextColor();
+            } else {
+                cancelTextColor = DefaultDialogConfig.getDialogColor().cancelTextColor();
+            }
+            cancelView.setTextColor(cancelTextColor);
+            cancelView.setOnClickListener(this);
+        }
+        titleView = contentView.findViewById(R.id.dialog_modal_title);
+
+        if (titleView != null) {
+            int titleTextColor;
+            if (dialogConfig != null && dialogConfig.getDialogColor() != null) {
+                titleTextColor = dialogConfig.getDialogColor().titleTextColor();
+            } else {
+                titleTextColor = DefaultDialogConfig.getDialogColor().titleTextColor();
+            }
+            titleView.setTextColor(titleTextColor);
+        }
+        okView = contentView.findViewById(R.id.dialog_modal_ok);
+        if (okView != null) {
+            int okTextColor;
+            if (dialogConfig != null && dialogConfig.getDialogColor() != null) {
+                okTextColor = dialogConfig.getDialogColor().okTextColor();
+            } else {
+                okTextColor = DefaultDialogConfig.getDialogColor().okTextColor();
+            }
+            okView.setTextColor(okTextColor);
+
+            okView.setOnClickListener(this);
+        }
 
     }
 

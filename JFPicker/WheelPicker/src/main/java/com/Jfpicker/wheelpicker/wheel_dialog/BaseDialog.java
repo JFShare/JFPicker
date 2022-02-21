@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -13,16 +18,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
 import androidx.annotation.CallSuper;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Dimension;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
+
 import com.Jfpicker.wheelpicker.R;
 
 /**
- * 屏幕底部弹出对话框
+ * 使用了AndroidPicker的Dialog代码，根据自身的需求做了相应的修改
+ * 主要修改：DefaultDialogConfig定义全局的弹窗样式。通过构造方法传入 DialogConfig，定义私有的弹窗样式。
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseDialog extends Dialog implements DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
@@ -31,12 +42,24 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     protected Activity activity;
     protected View contentView;
 
+    protected DialogConfig dialogConfig;
+
     public BaseDialog(@NonNull Activity activity) {
-        this(activity, R.style.DialogTheme_Base);
+        this(activity, null, R.style.DialogTheme_Base);
+    }
+
+    public BaseDialog(@NonNull Activity activity, DialogConfig dialogConfig) {
+        this(activity, dialogConfig, R.style.DialogTheme_Base);
     }
 
     public BaseDialog(@NonNull Activity activity, @StyleRes int themeResId) {
+        this(activity, null, themeResId);
+
+    }
+
+    public BaseDialog(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
         super(activity, themeResId);
+        this.dialogConfig = dialogConfig;
         init(activity);
     }
 
@@ -55,7 +78,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         super.setOnDismissListener(this);
         Window window = super.getWindow();
         if (window != null) {
-            //requestFeature must be called before adding content
             window.requestFeature(Window.FEATURE_NO_TITLE);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(activity.getResources().getDisplayMetrics().widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -71,9 +93,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         }
     }
 
-    /**
-     * @deprecated 使用 {@link #onInit(Bundle)} 代替
-     */
     @Deprecated
     @CallSuper
     protected void onInit(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
@@ -82,7 +101,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
 
     @CallSuper
     protected void onInit(@Nullable Bundle savedInstanceState) {
-        //noinspection deprecation
         onInit(activity, savedInstanceState);
     }
 
@@ -106,9 +124,7 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     @NonNull
     protected abstract View createContentView();
 
-    /**
-     * @deprecated 使用 {@link #initView()}  代替
-     */
+
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     @CallSuper
@@ -118,7 +134,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
 
     @CallSuper
     protected void initView() {
-        //noinspection deprecation
         initView(contentView);
     }
 
@@ -127,41 +142,42 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         setCanceledOnTouchOutside(false);
     }
 
-//    public final void setBackgroundColor(@ColorInt int color) {
-//        setBackgroundColor(CornerRound.No, color);
-//    }
-//
-//
-//    public final void setBackgroundColor(@CornerRound int cornerRound, @ColorInt int color) {
-//        setBackgroundColor(cornerRound, 20, color);
-//    }
-//
-//    public final void setBackgroundColor(@CornerRound int cornerRound, @Dimension(unit = Dimension.DP) int radius, @ColorInt int color) {
-//        if (contentView == null) {
-//            return;
-//        }
-//        float radiusInPX = contentView.getResources().getDisplayMetrics().density * radius;
-//        contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-//        Drawable drawable;
-//        switch (cornerRound) {
-//            case CornerRound.Top:
-//                float[] outerRadii = new float[]{radiusInPX, radiusInPX, radiusInPX, radiusInPX, 0, 0, 0, 0};
-//                ShapeDrawable shapeDrawable = new ShapeDrawable(new RoundRectShape(outerRadii, null, null));
-//                shapeDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-//                drawable = shapeDrawable;
-//                break;
-//            case CornerRound.All:
-//                GradientDrawable gradientDrawable = new GradientDrawable();
-//                gradientDrawable.setCornerRadius(radiusInPX);
-//                gradientDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-//                drawable = gradientDrawable;
-//                break;
-//            default:
-//                drawable = new ColorDrawable(color);
-//                break;
-//        }
-//        contentView.setBackground(drawable);
-//    }
+    public final void setBackgroundColor(@ColorInt int color) {
+        setBackgroundColor(CornerRound.No, color);
+    }
+
+
+    public final void setBackgroundColor(@CornerRound int cornerRound, @ColorInt int color) {
+        setBackgroundColor(cornerRound, 20, color);
+    }
+
+    public final void setBackgroundColor(@CornerRound int cornerRound,
+                                         @Dimension(unit = Dimension.DP) int radius, @ColorInt int color) {
+        if (contentView == null) {
+            return;
+        }
+        float radiusInPX = contentView.getResources().getDisplayMetrics().density * radius;
+        contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        Drawable drawable;
+        switch (cornerRound) {
+            case CornerRound.Top:
+                float[] outerRadii = new float[]{radiusInPX, radiusInPX, radiusInPX, radiusInPX, 0, 0, 0, 0};
+                ShapeDrawable shapeDrawable = new ShapeDrawable(new RoundRectShape(outerRadii, null, null));
+                shapeDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+                drawable = shapeDrawable;
+                break;
+            case CornerRound.All:
+                GradientDrawable gradientDrawable = new GradientDrawable();
+                gradientDrawable.setCornerRadius(radiusInPX);
+                gradientDrawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+                drawable = gradientDrawable;
+                break;
+            default:
+                drawable = new ColorDrawable(color);
+                break;
+        }
+        contentView.setBackground(drawable);
+    }
 
     public final void setBackgroundResource(@DrawableRes int resId) {
         if (contentView == null) {
@@ -235,9 +251,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             super.show();
             DialogLog.print("dialog show");
         } catch (Exception e) {
-            //...not attached to window manager
-            //...Unable to add window...is your activity running?
-            //...Activity...has leaked window...that was originally added here
             DialogLog.print(e);
         }
     }
@@ -252,8 +265,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             super.dismiss();
             DialogLog.print("dialog dismiss");
         } catch (Exception e) {
-            //...not attached to window manager
-            //...Activity...has leaked window...that was originally added here
             DialogLog.print(e);
         }
     }
@@ -278,18 +289,13 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         DialogLog.print("dialog detached from window");
     }
 
-    /**
-     * @see #onAttachedToWindow()
-     */
     @CallSuper
     @Override
     public void onShow(DialogInterface dialog) {
         DialogLog.print("dialog onShow");
     }
 
-    /**
-     * @see #onDetachedFromWindow()
-     */
+
     @CallSuper
     @Override
     public void onDismiss(DialogInterface dialog) {

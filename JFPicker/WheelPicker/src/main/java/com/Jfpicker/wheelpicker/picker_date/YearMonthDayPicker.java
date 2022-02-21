@@ -8,20 +8,25 @@ import androidx.annotation.StyleRes;
 
 import com.Jfpicker.wheelpicker.picker_date.listener.OnDatePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
 
 /**
- * @author Created by JF on  2021/11/11 10:06
- * @description
+ * @author Created by JF on  2021/11/11
+ * @description 年月日选择器
  */
 
 public class YearMonthDayPicker extends ModalDialog {
 
-    YearMonthDayWheelLayout wheelLayout;
-    OnDatePickedListener onDatePickedListener;
+    protected YearMonthDayWheelLayout wheelLayout;
+    private OnDatePickedListener onDatePickedListener;
 
     public YearMonthDayPicker(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public YearMonthDayPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
     }
 
     public YearMonthDayPicker(@NonNull Activity activity, @StyleRes int themeResId) {
@@ -38,7 +43,9 @@ public class YearMonthDayPicker extends ModalDialog {
     @Override
     protected void initView() {
         super.initView();
-        titleView.setText("日期选择");
+        if (titleView != null) {
+            titleView.setText("日期选择");
+        }
     }
 
     @Override

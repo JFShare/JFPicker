@@ -2,10 +2,12 @@ package com.Jfpicker.sample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.Jfpicker.sample.custom.LovelyBirthdayPicker;
 import com.Jfpicker.wheelpicker.picker_date.BirthdayPicker;
 import com.Jfpicker.wheelpicker.picker_date.BirthdayWithTimePicker;
 import com.Jfpicker.wheelpicker.picker_date.DateTimePicker;
@@ -18,6 +20,10 @@ import com.Jfpicker.wheelpicker.picker_date.YearMonthDayPicker;
 import com.Jfpicker.wheelpicker.picker_date.annotation.DateMode;
 import com.Jfpicker.wheelpicker.picker_date.listener.OnDatePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.CornerRound;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogBackground;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogStyle;
 import com.Jfpicker.wheelpicker.wheelview.WheelAttrs;
 
 public class DatePickActivity extends AppCompatActivity {
@@ -33,13 +39,20 @@ public class DatePickActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 WheelAttrs attrs = datelayout.getWheelViewYear().getAttrsBuilder()
-                        .setTextColorCenter(getResources().getColor(R.color.purple_500))
+                        .setTextColorCenter(getResources().getColor(R.color.colorPrimary))
                         .setItemSize(50)
                         .setItemCount(2)
                         .setItemDegreeTotal(120f)
-                        .setDividerSize(50).build();
+                        .setDividerSize(50)
+                        .setTextSize(20)
+                        .setAlphaGradient(false)
+                        .setTextBlod(true)
+                        .setCenterTextBlod(true)
+                        .setTextSizeGradient(true)
+                        .setMinGradientTextSize(14)
+                        .build();
                 datelayout.setAllWheelViewAttrs(attrs);
-                datelayout.setLabelTextColor(getResources().getColor(R.color.purple_500));
+                datelayout.setLabelTextColor(getResources().getColor(R.color.colorPrimary));
             }
         });
 
@@ -92,7 +105,7 @@ public class DatePickActivity extends AppCompatActivity {
             public void onClick(View v) {
                 YearMonthDayPicker picker = new YearMonthDayPicker(DatePickActivity.this);
                 WheelAttrs attrs = picker.getWheelLayout().getWheelViewYear().getAttrsBuilder()
-                        .setTextColorCenter(getResources().getColor(R.color.purple_500))
+                        .setTextColorCenter(getResources().getColor(R.color.colorPrimary))
                         .setItemSize(50)
                         .setIsWheel(false)
                         .setItemCount(2)
@@ -100,8 +113,8 @@ public class DatePickActivity extends AppCompatActivity {
 
                 picker.getWheelLayout().setAllWheelViewAttrs(attrs);
 
-                picker.getOkView().setTextColor(getResources().getColor(R.color.purple_500));
-                picker.getWheelLayout().setLabelTextColor(getResources().getColor(R.color.purple_500));
+                picker.getOkView().setTextColor(getResources().getColor(R.color.colorPrimary));
+                picker.getWheelLayout().setLabelTextColor(getResources().getColor(R.color.colorPrimary));
 
                 picker.setOnDatePickedListener(new OnDatePickedListener() {
                     @Override
@@ -128,6 +141,29 @@ public class DatePickActivity extends AppCompatActivity {
                     }
                 });
                 picker.show();
+            }
+        });
+
+        findViewById(R.id.btnYearMonthDayCustom).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogConfig config = new DialogConfig();
+                config.setDialogStyle(DialogStyle.center);
+                config.setDialogBackground(new DialogBackground()
+                        .setDialogWidthP(0.7F)
+                        .setDialogCornerRound(CornerRound.All)
+                        .setCornerRadius(15)
+                        .setContentBackgroundColor(Color.WHITE));
+                LovelyBirthdayPicker picker = new LovelyBirthdayPicker(DatePickActivity.this, config);
+                picker.setOnDatePickedListener(new OnDatePickedListener() {
+                    @Override
+                    public void onDatePicked(int year, int month, int day) {
+                        Toast.makeText(DatePickActivity.this,
+                                year + "-" + month + "-" + day, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                picker.show();
+
             }
         });
 
@@ -181,15 +217,15 @@ public class DatePickActivity extends AppCompatActivity {
                 HourMinuteSecondPicker picker = new HourMinuteSecondPicker(DatePickActivity.this);
 
                 WheelAttrs attrs = picker.getWheelLayout().getWheelViewHour().getAttrsBuilder()
-                        .setTextColorCenter(getResources().getColor(R.color.purple_500))
+                        .setTextColorCenter(getResources().getColor(R.color.colorPrimary))
                         .setItemSize(50)
                         .setIsWheel(false)
                         .setItemCount(2)
                         .setDividerSize(50).build();
                 picker.getWheelLayout().setAllWheelViewAttrs(attrs);
 
-                picker.getOkView().setTextColor(getResources().getColor(R.color.purple_500));
-                picker.getWheelLayout().setLabelTextColor(getResources().getColor(R.color.purple_500));
+                picker.getOkView().setTextColor(getResources().getColor(R.color.colorPrimary));
+                picker.getWheelLayout().setLabelTextColor(getResources().getColor(R.color.colorPrimary));
 
 
                 picker.setOnTimePickedListener(new OnTimePickedListener() {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="commonButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="minHeight">44dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+    <!--    <style name="defaultWheel">-->
+    <!--        <item name="wheelDividerColor">#dedede</item>-->
+    <!--        <item name="wheelDividerSize">40dp</item>-->
+    <!--        <item name="wheelItemCount">2</item>-->
+    <!--        <item name="wheelItemSize">35dp</item>-->
+    <!--        <item name="wheelTextColor">#999999</item>-->
+    <!--        <item name="wheelTextColorCenter">#333333</item>-->
+    <!--        <item name="wheelTextGravity">center</item>-->
+    <!--        <item name="wheelTextSize">18sp</item>-->
+    <!--        <item name="gravityCoefficient">0.75</item>-->
+    <!--        <item name="isWheel">true</item>-->
+    <!--    </style>-->
+
+    <!--    <style name="defaultNoWheel">-->
+    <!--        <item name="wheelDividerColor">#dedede</item>-->
+    <!--        <item name="wheelDividerSize">50dp</item>-->
+    <!--        <item name="wheelItemCount">2</item>-->
+    <!--        <item name="wheelItemSize">50dp</item>-->
+    <!--        <item name="wheelTextColor">#999999</item>-->
+    <!--        <item name="wheelTextColorCenter">#333333</item>-->
+    <!--        <item name="wheelTextGravity">center</item>-->
+    <!--        <item name="wheelTextSize">18sp</item>-->
+    <!--        <item name="gravityCoefficient">0.75</item>-->
+    <!--        <item name="isWheel">false</item>-->
+    <!--    </style>-->
+
+</resources>

@@ -14,7 +14,7 @@ import androidx.annotation.WorkerThread;
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressLoader;
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressParser;
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressReceiver;
-import com.Jfpicker.wheelpicker.picker_adress.entity.ProvinceEntity;
+import com.Jfpicker.wheelpicker.picker_adress.entity.AddressItemEntity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
-
+/**
+ * 使用了AndroidPicker的地址加载代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 @SuppressWarnings("unused")
 public class AssetAddressLoader implements AddressLoader {
     private final Context context;
@@ -39,7 +42,7 @@ public class AssetAddressLoader implements AddressLoader {
             @Override
             public void run() {
                 String text = loadFromAssets();
-                final List<ProvinceEntity> data;
+                final List<AddressItemEntity> data;
                 if (TextUtils.isEmpty(text)) {
                     data = new ArrayList<>();
                 } else {

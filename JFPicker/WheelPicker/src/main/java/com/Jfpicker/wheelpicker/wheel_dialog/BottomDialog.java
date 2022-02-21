@@ -11,20 +11,35 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
+
 import com.Jfpicker.wheelpicker.R;
 
+/**
+ * 使用了AndroidPicker的Dialog代码，根据自身的需求做了相应的修改
+ * 主要修改：DefaultDialogConfig定义全局的弹窗样式。通过构造方法传入 DialogConfig，定义私有的弹窗样式。
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 public abstract class BottomDialog extends BaseDialog {
     protected View maskView;
 
     public BottomDialog(@NonNull Activity activity) {
-        super(activity, R.style.DialogTheme_Sheet);
+        super(activity, null, R.style.DialogTheme_Sheet);
+    }
+
+    public BottomDialog(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig, R.style.DialogTheme_Sheet);
     }
 
     public BottomDialog(@NonNull Activity activity, @StyleRes int themeResId) {
-        super(activity, themeResId);
+        super(activity, null, themeResId);
+    }
+
+    public BottomDialog(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
     }
 
     @Override

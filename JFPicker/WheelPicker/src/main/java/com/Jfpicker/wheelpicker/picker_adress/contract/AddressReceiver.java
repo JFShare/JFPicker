@@ -4,15 +4,19 @@ package com.Jfpicker.wheelpicker.picker_adress.contract;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 
-import com.Jfpicker.wheelpicker.picker_adress.entity.ProvinceEntity;
+import com.Jfpicker.wheelpicker.picker_adress.entity.AddressItemEntity;
+
 
 import java.util.List;
 
-
+/**
+ * 使用了AndroidPicker的地址加载代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 
 public interface AddressReceiver {
 
     @MainThread
-    void onAddressReceived(@NonNull List<ProvinceEntity> data);
+    void onAddressReceived(@NonNull List<AddressItemEntity> data);
 
 }

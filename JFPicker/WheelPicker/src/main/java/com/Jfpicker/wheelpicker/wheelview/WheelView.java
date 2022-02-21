@@ -15,9 +15,11 @@ import com.Jfpicker.wheelpicker.utils.DensityUtils;
 import com.Jfpicker.wheelpicker.R;
 import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
 
-
-
-
+/**
+ * @author Created by JF on  2021/11/10
+ * @description 核心的WheelView滚轮控件，样式由WheelDecoration绘制，数据由WheelViewAdapter控制，代码来自同事分享
+ * 如果有知道来自哪位大神，请留言。
+ */
 public class WheelView extends FrameLayout {
     /**
      * 无效的位置
@@ -45,7 +47,7 @@ public class WheelView extends FrameLayout {
     /**
      * 文本大小
      */
-    private float textSize = 36.f;
+    private float textSize;
     /**
      * item数量
      */
@@ -53,11 +55,11 @@ public class WheelView extends FrameLayout {
     /**
      * item大小
      */
-    private int itemSize = 90;
+    private int itemSize;
     /**
      * 分割线之间距离
      */
-    private int dividerSize = 90;
+    private int dividerSize;
     /**
      * 布局方向
      */
@@ -87,22 +89,42 @@ public class WheelView extends FrameLayout {
     private float itemDegreeTotal = 180.f;
 
     /**
+     * 文字渐变
+     */
+    private boolean alphaGradient = true;
+
+    /**
+     * 文字是否加粗
+     */
+    private boolean isTextBlod = false;
+
+    /**
+     * 选中文字是否加粗
+     */
+    private boolean isCenterTextBlod = false;
+
+    /**
+     * 文字大小是否渐变
+     */
+    private boolean textSizeGradient = false;
+
+    /**
+     * 文字大小渐变 的最小文字尺寸
+     */
+    private float minGradientTextSize;
+
+    /**
      * recyclerView
      */
     private CScrollRecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
-    /**
-     * wheel 3d
-     */
+
     private SimpleWheelDecoration wheelDecoration;
     private WheelViewAdapter wheelAdapter;
-    /**
-     * adapter
-     */
+
     private WheelDataAbstractAdapter mDataAdapter;
     private WheelViewObserver observer;
 
-    private WheelItemClickListener itemClickListener;
 
     private int mState = RecyclerView.SCROLL_STATE_IDLE;
 
@@ -114,9 +136,6 @@ public class WheelView extends FrameLayout {
         this.formatter = formatter;
         if (wheelDecoration != null) {
             wheelDecoration.setFormatter(formatter);
-//            if (wheelAdapter != null) {
-//                wheelAdapter.notifyDataSetChanged();
-//            }
         }
     }
 
@@ -144,15 +163,20 @@ public class WheelView extends FrameLayout {
             textColor = a.getColor(R.styleable.WheelView_wheelTextColor, textColor);
             textColorCenter = a.getColor(R.styleable.WheelView_wheelTextColorCenter, textColorCenter);
             dividerColor = a.getColor(R.styleable.WheelView_wheelDividerColor, dividerColor);
-            textSize = a.getDimension(R.styleable.WheelView_wheelTextSize, textSize);
-            itemSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelItemSize, itemSize);
-            dividerSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerSize, dividerSize);
+            textSize = a.getDimension(R.styleable.WheelView_wheelTextSize, DensityUtils.sp2px(context, 18));
+            itemSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelItemSize, DensityUtils.dip2px(context, 35));
+            dividerSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerSize, DensityUtils.dip2px(context, 35));
             orientation = a.getInt(R.styleable.WheelView_wheelOrientation, orientation);
             gravity = a.getInt(R.styleable.WheelView_wheelGravity, gravity);
             gravity_text = a.getInt(R.styleable.WheelView_wheelTextGravity, gravity);
             gravityCoefficient = a.getFloat(R.styleable.WheelView_gravityCoefficient, gravityCoefficient);
             isWheel = a.getBoolean(R.styleable.WheelView_isWheel, true);
             itemDegreeTotal = a.getFloat(R.styleable.WheelView_itemDegreeTotal, itemDegreeTotal);
+            alphaGradient = a.getBoolean(R.styleable.WheelView_alphaGradient, alphaGradient);
+            isTextBlod = a.getBoolean(R.styleable.WheelView_isTextBlod, isTextBlod);
+            isCenterTextBlod = a.getBoolean(R.styleable.WheelView_isCenterTextBlod, isCenterTextBlod);
+            textSizeGradient = a.getBoolean(R.styleable.WheelView_textSizeGradient, textSizeGradient);
+            minGradientTextSize = a.getDimension(R.styleable.WheelView_minGradientTextSize, DensityUtils.sp2px(context, 10));
             a.recycle();
         }
         initRecyclerView(context);
@@ -173,7 +197,8 @@ public class WheelView extends FrameLayout {
 
         wheelAdapter = new WheelViewAdapter(orientation, itemSize, itemCount);
         wheelDecoration = new SimpleWheelDecoration(wheelAdapter, formatter, gravity, gravityCoefficient, isWheel,
-                gravity_text, textColor, textColorCenter, textSize, dividerColor, dividerSize, itemDegreeTotal);
+                gravity_text, textColor, textColorCenter, textSize, dividerColor, dividerSize, itemDegreeTotal,
+                alphaGradient, isTextBlod, isCenterTextBlod, textSizeGradient, minGradientTextSize);
         mRecyclerView.addItemDecoration(wheelDecoration);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -238,15 +263,13 @@ public class WheelView extends FrameLayout {
     }
 
     private OnItemSelectedListener listener;
-    private OnItemClickListener clickListener;
+
 
     public void setOnItemSelectedListener(OnItemSelectedListener listener) {
         this.listener = listener;
     }
 
-    /**
-     * item selected
-     */
+
     public interface OnItemSelectedListener {
         void onItemSelected(WheelView wheelView, int index);
 
@@ -254,33 +277,6 @@ public class WheelView extends FrameLayout {
 
     }
 
-    /**
-     * 设置点击
-     *
-     * @param listener
-     */
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        if (itemClickListener == null) {
-            itemClickListener = new WheelItemClickListener(getContext()) {
-                @Override
-                void onItemClick(int position) {
-                    int currentPosition = position - itemCount;
-                    if (clickListener != null && currentPosition == getCurrentItem()) {
-                        clickListener.onItemClick(WheelView.this, currentPosition);
-                    }
-                }
-            };
-            mRecyclerView.addOnItemTouchListener(itemClickListener);
-        }
-        this.clickListener = listener;
-    }
-
-    /**
-     * item点击
-     */
-    public interface OnItemClickListener {
-        void onItemClick(WheelView wheelView, int centerPosition);
-    }
 
     private class WheelViewObserver extends DataSetObserver {
         @Override
@@ -294,9 +290,7 @@ public class WheelView extends FrameLayout {
         }
     }
 
-    /**
-     * wheel adapter
-     */
+
     public static abstract class WheelDataAbstractAdapter {
 
         private DataSetObserver wheelObserver;
@@ -351,6 +345,11 @@ public class WheelView extends FrameLayout {
                 gravityCoefficient = attrs.getGravityCoefficient();
                 isWheel = attrs.isWheel();
                 itemDegreeTotal = attrs.getItemDegreeTotal();
+                alphaGradient = attrs.isAlphaGradient();
+                isTextBlod = attrs.isTextBlod();
+                isCenterTextBlod = attrs.isCenterTextBlod();
+                textSizeGradient = attrs.isTextSizeGradient();
+                minGradientTextSize = DensityUtils.sp2px(getContext(), attrs.getMinGradientTextSize());
 
                 initRecyclerView(getContext());
                 if (mDataAdapter != null) {
@@ -382,7 +381,12 @@ public class WheelView extends FrameLayout {
                 .setTextGravity(gravity_text)
                 .setGravityCoefficient(gravityCoefficient)
                 .setIsWheel(isWheel)
-                .setItemDegreeTotal(itemDegreeTotal);
+                .setItemDegreeTotal(itemDegreeTotal)
+                .setAlphaGradient(alphaGradient)
+                .setTextBlod(isTextBlod)
+                .setCenterTextBlod(isCenterTextBlod)
+                .setTextSizeGradient(textSizeGradient)
+                .setMinGradientTextSize(DensityUtils.px2sp(getContext(), minGradientTextSize));
     }
 
 }

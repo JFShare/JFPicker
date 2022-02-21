@@ -1,11 +1,8 @@
 package com.Jfpicker.wheelpicker.wheelview;
-
-
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 
 
 class WheelViewAdapter extends RecyclerView.Adapter<WheelViewHolder> {

@@ -7,6 +7,10 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * @author Created by JF on  2021/11/15
+ * @description
+ */
 
 public class AddressEntity implements Serializable {
 

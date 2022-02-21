@@ -11,11 +11,12 @@ import com.Jfpicker.wheelpicker.utils.DensityUtils;
 import com.Jfpicker.wheelpicker.picker_date.listener.OnDateTimePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout;
 import com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
 
 /**
- * @author Created by JF on  2021/11/12 9:29
- * @description
+ * @author Created by JF on  2021/11/12
+ * @description 年月日时分秒选择器
  */
 
 public class DateTimePicker extends ModalDialog {
@@ -28,6 +29,10 @@ public class DateTimePicker extends ModalDialog {
 
     public DateTimePicker(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public DateTimePicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
     }
 
     public DateTimePicker(@NonNull Activity activity, @StyleRes int themeResId) {

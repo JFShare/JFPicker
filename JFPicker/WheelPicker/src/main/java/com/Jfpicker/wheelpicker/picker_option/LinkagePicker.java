@@ -9,9 +9,14 @@ import androidx.annotation.StyleRes;
 import com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnLinkagePickedListener;
 import com.Jfpicker.wheelpicker.picker_option.widget.LinkageWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
 
-
+/**
+ * 三级联动的选择弹窗
+ * 参考了AndroidPicker的LinkagePicker代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LinkagePicker extends ModalDialog {
     protected LinkageWheelLayout wheelLayout;
@@ -19,6 +24,10 @@ public class LinkagePicker extends ModalDialog {
 
     public LinkagePicker(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public LinkagePicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
     }
 
     public LinkagePicker(@NonNull Activity activity, @StyleRes int themeResId) {

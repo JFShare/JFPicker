@@ -31,10 +31,7 @@
 
         <Button
             android:id="@+id/btnChangeStyle"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="动态改变布局的样式">
 
         </Button>
@@ -50,10 +47,7 @@
 
         <Button
             android:id="@+id/btnYearMonthDay"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="年月日选择器（默认样式）">
 
         </Button>
@@ -91,29 +85,24 @@
 
         <Button
             android:id="@+id/btnCustomYearMonthDay"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="非滚轮年月日选择器（自定义样式）">
 
         </Button>
 
         <Button
             android:id="@+id/btnBirthday"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="列表项带文字的年月日选择器">
 
         </Button>
 
+        <Button
+            android:id="@+id/btnYearMonthDayCustom"
+            style="@style/commonButton"
+            android:text="在Android轮子哥的开源项目中看到的一款非常可爱的选择器，大致模仿下样式(使用自定义滚轮属性实现)">
 
-
-
-
-
+        </Button>
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,10 +115,7 @@
 
         <Button
             android:id="@+id/btnHourMinuteSecond"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="时分秒选择器（默认样式）">
 
         </Button>
@@ -167,10 +153,7 @@
 
         <Button
             android:id="@+id/btnCustomHourMinuteSecond"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="非滚轮时分秒选择器（自定义样式）">
 
         </Button>
@@ -186,20 +169,14 @@
 
         <Button
             android:id="@+id/btnDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="年月日时分秒选择器（默认样式）">
 
         </Button>
 
         <Button
             android:id="@+id/btnDateTimeBirthday"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/purple_200"
+            style="@style/commonButton"
             android:text="年月日时分秒选择器（列表项带有文本）">
 
         </Button>

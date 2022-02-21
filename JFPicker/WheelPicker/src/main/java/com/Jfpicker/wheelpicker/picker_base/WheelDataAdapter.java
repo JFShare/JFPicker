@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Created by JF on  2021/11/9 14:53
- * @description
+ * @author Created by JF on  2021/11/9
+ * @description WheelView.WheelDataAbstractAdapter的实现类，strs是列表数据
  */
 
 public class WheelDataAdapter extends WheelView.WheelDataAbstractAdapter {

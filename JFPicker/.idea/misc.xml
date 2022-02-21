@@ -36,6 +36,44 @@
         <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_hot_item_history.xml" value="0.3375" />
         <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_hotsearch_title_layout.xml" value="0.3375" />
         <entry key="..\:/Android_thirdProgrect/DialogCollect/flexbox/src/main/res/layout/zhihu_item_history.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/drawable/ripper_common_wave_bg.xml" value="0.3515625" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/drawable/ripper_wave_bg.xml" value="0.3578125" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/drawable/shape_scroll_bar_thumb.xml" value="0.22777777777777777" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/custom_week_bar.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/default_calendar_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/default_calendar_title_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/default_calendar_view_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/dialog_header_style_default.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/dialog_option_recyclerview.xml" value="0.33125" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_adress_list.xml" value="0.15966386554621848" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_adress_viewpager.xml" value="0.1" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_content.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_netrequest_option_list.xml" value="0.19607843137254902" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_netrequest_viewpager.xml" value="0.13725490196078433" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_onepage_contain_recyclerview.xml" value="0.1346153846153846" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/item_option_list.xml" value="0.33125" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/lovely_birthday_picker_header_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/picker_calendar_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/picker_sure_content_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/picker_sure_footer_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/picker_sure_header_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_adress_viewpager.xml" value="0.1484593837535014" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_calendar.xml" value="0.33" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_date.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_linkage.xml" value="0.33125" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_net_request.xml" value="0.13445378151260504" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_option.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_recyclerview.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/WheelPicker/src/main/res/layout/wheel_picker_time.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_adress_pick.xml" value="0.33" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_calendar_pick.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_date_pick.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_option_pick.xml" value="0.33125" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/activity_picker.xml" value="0.12044817927170869" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/item_my_option_recyclerview.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/lovely_birthday_picker_footer_layout.xml" value="0.3375" />
+        <entry key="..\:/Android_thirdProgrect/JFPicker-master/JFPicker/app/src/main/res/layout/lovely_birthday_picker_header_layout.xml" value="0.33" />
         <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/dialog_header_style_default.xml" value="0.3328125" />
         <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_date.xml" value="0.3328125" />
         <entry key="..\:/Android_thirdProgrect/Jffastdevelop/WheelPicker/src/main/res/layout/wheel_picker_datime.xml" value="0.3328125" />

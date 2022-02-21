@@ -10,7 +10,7 @@
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewHour"
-        style="@style/defaultFIOSWheel"
+        style="@style/defaultWheel"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         app:wheelGravity="center" />
@@ -25,7 +25,7 @@
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewMinute"
-        style="@style/defaultFIOSWheel"
+        style="@style/defaultWheel"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         app:wheelGravity="center" />
@@ -41,7 +41,7 @@
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewSecond"
-        style="@style/defaultFIOSWheel"
+        style="@style/defaultWheel"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         app:wheelGravity="center" />

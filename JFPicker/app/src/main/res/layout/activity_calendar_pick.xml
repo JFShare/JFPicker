@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".CalendarPickActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="日历选择器"
+        android:textColor="#333333">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginBottom="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="使用了开源库CalendarView日历组件\n https://github.com/huanghaibin-dev/CalendarView">
+
+    </TextView>
+    <Button
+        android:id="@+id/btnCalendarPickerSingle"
+        style="@style/commonButton"
+        android:text="日历选择器(单选)">
+
+    </Button>
+    <Button
+        android:id="@+id/btnCalendarPickerMulti"
+        style="@style/commonButton"
+        android:text="日历选择器(多选)">
+
+    </Button>
+    <Button
+        android:id="@+id/btnCalendarPickerRange"
+        style="@style/commonButton"
+        android:text="日历选择器(范围)">
+
+    </Button>
+</LinearLayout>

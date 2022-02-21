@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Created by JF on  2021/11/11 9:55
- * @description
+ * @author Created by JF on  2021/11/11
+ * @description 年月日选择布局
  */
 
 public class YearMonthDayWheelLayout extends LinearLayout {
@@ -115,6 +115,13 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         this.initWheelView(startYear, endYear, currentYear, currentMonth, currentDay);
     }
 
+    /**
+     * @param startYear    最小年份
+     * @param endYear      最大年份
+     * @param currentYear  选中年
+     * @param currentMonth 选中月
+     * @param currentDay   选中日
+     */
     public void initWheelView(int startYear, int endYear,
                               int currentYear, int currentMonth,
                               int currentDay) {
@@ -129,6 +136,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
 
         setFormatter(formatter);
 
+        //初始化年滚轮
         adapterYear = new WheelDataAdapter();
         adapterYear.strs.clear();
         for (int i = wheelStartYear; i <= wheelEndYear; i++) {
@@ -154,6 +162,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         wheelViewYear.setAdapter(adapterYear);
         wheelViewYear.setCurrentItem(indexYearChooose);
 
+        //初始化月滚轮
         adapterMonth = new WheelDataAdapter();
         adapterMonth.strs.clear();
         for (int i = 1; i <= 12; i++) {
@@ -178,6 +187,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         wheelViewMonth.setAdapter(adapterMonth);
         wheelViewMonth.setCurrentItem(indexMonthChoose);
 
+        //初始化日滚轮
         adapterDay = new WheelDataAdapter();
         adapterDay.strs.clear();
         int CurrentDays = DateUtils.calculateDaysInMonth(currentYear, currentMonth);
@@ -206,6 +216,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         hasInitView = true;
     }
 
+    //设置显示格式化
     public void setFormatter(DateFormatter formatter) {
         this.formatter = formatter;
         wheelViewYear.setFormatter(new WheelFormatter() {
@@ -228,6 +239,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         });
     }
 
+    //设置显示模式
     public void setDateMode(@DateMode int dateMode) {
 
         this.dateMode = dateMode;
@@ -263,9 +275,10 @@ public class YearMonthDayWheelLayout extends LinearLayout {
 
     }
 
+    //年月改变、显示模式改变以后，需要重新计算天数
     public void reloadDayData() {
         if (dateMode == DateMode.MONTH_DAY) {
-            //需要根据年份及月份动态计算天数
+            //需要根据年份及月份动态计算天数，这里因为是月日显示模式，2月是29天
             List<Integer> dayList = new ArrayList<>();
             int maxDays = DateUtils.getMaxDaysInMonth(
                     (Integer) adapterMonth.strs.get(wheelViewMonth.getCurrentItem()));
@@ -349,7 +362,8 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         tvMonthLabel.setVisibility(visibility);
         tvDayLabel.setVisibility(visibility);
     }
-    public void setLabelVisibility(int yearLabelVisibility,int monthLabelVisibility,int dayLabelVisibility) {
+
+    public void setLabelVisibility(int yearLabelVisibility, int monthLabelVisibility, int dayLabelVisibility) {
         tvYearLabel.setVisibility(yearLabelVisibility);
         tvMonthLabel.setVisibility(monthLabelVisibility);
         tvDayLabel.setVisibility(dayLabelVisibility);

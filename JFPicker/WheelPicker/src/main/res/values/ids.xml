@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="dialog_modal_title" type="id"></item>
-    <item name="dialog_modal_cancel" type="id"></item>
-    <item name="dialog_modal_ok" type="id"></item>
+    <item name="dialog_modal_title" type="id" />
+    <item name="dialog_modal_cancel" type="id" />
+    <item name="dialog_modal_ok" type="id" />
+
+    <item name="viewpage_item_recyclerView" type="id" />
+    <item name="recyclerview_content_text" type="id" />
+    <item name="recyclerView_content_framelayout" type="id" />
+
+    <item name="my_calendar" type="id" />
+
 </resources>

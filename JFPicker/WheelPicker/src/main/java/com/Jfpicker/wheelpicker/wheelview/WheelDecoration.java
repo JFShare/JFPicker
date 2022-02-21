@@ -9,6 +9,10 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @author Created by JF on  2021/11/10
+ * @description 继承自RecyclerView.ItemDecoration的抽象类，实现了3D滚轮的效果
+ */
 abstract class WheelDecoration extends RecyclerView.ItemDecoration {
     /**
      * 垂直布局时的靠左,居中,靠右立体效果
@@ -56,16 +60,32 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
      */
     boolean hasCenterItem;
     float halfItemHeight;
-
     int centerItemPosition = IDLE_POSITION;
-    float gravityCoefficient = DEF_SCALE;
-    boolean isWheel = true;
-    float itemDegreeTotal = 180.f;
 
-    WheelDecoration(int itemCount, int itemSize, int gravity, float gravityCoefficient, boolean isWheel, float itemDegreeTotal) {
+    /**
+     * 左右倾斜的幅度
+     */
+    float gravityCoefficient;
+    /**
+     * 是否显示3D旋转效果
+     */
+    boolean isWheel;
+    /**
+     * 总体的弧度
+     */
+    float itemDegreeTotal;
+    float haltItemDegreeTotal;
+    /**
+     * 是否透明度渐变
+     */
+    boolean alphaGradient;
+
+    WheelDecoration(int itemCount, int itemSize, int gravity, float gravityCoefficient,
+                    boolean isWheel, float itemDegreeTotal, boolean alphaGradient) {
         this.itemCount = itemCount;
         this.itemSize = itemSize;
         this.itemDegreeTotal = itemDegreeTotal;
+        this.haltItemDegreeTotal = itemDegreeTotal / 2;
         this.halfItemHeight = itemSize / 2.0f;
         this.itemDegree = itemDegreeTotal / (itemCount * 2 + 1);
         this.gravity = gravity;
@@ -73,6 +93,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
 
         this.gravityCoefficient = gravityCoefficient;
         this.isWheel = isWheel;
+        this.alphaGradient = alphaGradient;
 
         camera = new Camera();
         matrix = new Matrix();
@@ -84,7 +105,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
         centerItemPosition = IDLE_POSITION;
         if (!(parent.getLayoutManager() instanceof LinearLayoutManager)) return;
         LinearLayoutManager llm = (LinearLayoutManager) parent.getLayoutManager();
-        boolean isVertical = llm.getOrientation() == LinearLayoutManager.VERTICAL;//垂直与水平布局方式
+        boolean isVertical = llm.getOrientation() == LinearLayoutManager.VERTICAL;
         Rect parentRect = new Rect(parent.getLeft(), parent.getTop(), parent.getRight(), parent.getBottom());
         int startPosition = llm.findFirstVisibleItemPosition();
         if (startPosition < 0) return;
@@ -93,12 +114,13 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
         for (int itemPosition = startPosition; itemPosition <= endPosition; itemPosition++) {
             if (itemPosition < itemCount) continue;//itemCount为空白项,不考虑
             if (itemPosition >= llm.getItemCount() - itemCount) break;//超过列表的也是空白项
-            //Log.i("you", "onDraw currentItem... " + itemPosition);
             View itemView = llm.findViewByPosition(itemPosition);
             Rect itemRect = new Rect(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            if (isVertical) {//垂直布局, 还需要靠对齐方式
+            if (isVertical) {
+                //垂直布局
                 drawVerticalItem(c, itemRect, itemPosition, translateX(parentRect), parentRect.exactCenterY());
-            } else {//水平布局
+            } else {
+                //水平布局
                 drawHorizontalItem(c, itemRect, itemPosition, parentRect.exactCenterX(), parentRect.exactCenterY());
             }
         }
@@ -137,12 +159,15 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
         int realPosition = position - itemCount;//数据中的实际位置
         float itemCenterY = rect.exactCenterY();
         float scrollOffY = itemCenterY - parentCenterY;
+
         float rotateDegreeX = scrollOffY * itemDegree / itemSize;//垂直布局时要以X轴为中心旋转
+
         int alpha = degreeAlpha(rotateDegreeX);
+        float textSizeP = degreeP(rotateDegreeX);
         if (alpha <= 0) return;
         float rotateSinX = (float) Math.sin(Math.toRadians(rotateDegreeX));
         float rotateOffY = scrollOffY - wheelRadio * rotateSinX;//因旋转导致界面视角的偏移
-        //Log.i("you", "drawVerticalItem degree " + rotateDegreeX);
+
         //计算中心item, 优先最靠近中心区域的为中心点
         boolean isCenterItem = false;
         if (!hasCenterItem) {
@@ -171,7 +196,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
             c.concat(matrix);
         }
 
-        drawItem(c, rect, realPosition, alpha, isCenterItem, true);
+        drawItem(c, rect, realPosition, alpha, isCenterItem, true, textSizeP);
         c.restore();
     }
 
@@ -190,10 +215,10 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
         float scrollOffX = itemCenterX - parentCenterX;
         float rotateDegreeY = scrollOffX * itemDegree / itemSize;//垂直布局时要以Y轴为中心旋转
         int alpha = degreeAlpha(rotateDegreeY);
+        float textSizeP = degreeP(rotateDegreeY);
         if (alpha <= 0) return;
         float rotateSinY = (float) Math.sin(Math.toRadians(rotateDegreeY));
         float rotateOffX = scrollOffX - wheelRadio * rotateSinY;//因旋转导致界面视角的偏移
-        //Log.i("you", "drawHorizontalItem degree " + rotateDegreeY);
 
         boolean isCenterItem = false;
         if (!hasCenterItem) {
@@ -220,21 +245,37 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
             c.concat(matrix);
         }
 
-        drawItem(c, rect, realPosition, alpha, isCenterItem, false);
+        drawItem(c, rect, realPosition, alpha, isCenterItem, false, textSizeP);
         c.restore();
     }
 
     /**
-     * 旋转大于90度时,完全透明
+     * 旋转大于一半的总度数，完全透明
      *
      * @param degree
      * @return
      */
     int degreeAlpha(float degree) {
+        if (!alphaGradient) {
+            return 255;
+        }
         degree = Math.abs(degree);
-        if (degree >= 90) return 0;
-        float al = (90 - degree) / 90;
+        if (degree >= haltItemDegreeTotal) return 0;
+        float al = (haltItemDegreeTotal - degree) / haltItemDegreeTotal;
         return (int) (255 * al);
+    }
+
+    float degreeP(float degree) {
+        degree = Math.abs(degree);
+        if (degree >= haltItemDegreeTotal) return 0;
+        float p = (haltItemDegreeTotal - degree) / haltItemDegreeTotal;
+        if (p > 1) {
+            return 1;
+        }
+        if (p < 0) {
+            return 0;
+        }
+        return p;
     }
 
     /**
@@ -246,8 +287,9 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
      * @param alpha        已经计算好的item所在位置的透明度,也可以不考虑设置此参数
      * @param isCenterItem 是否为中心点
      * @param isVertical   是否为垂直布局, false 为水平布局
+     * @param textSizeP    文字缩放的尺寸
      */
-    abstract void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical);
+    abstract void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical, float textSizeP);
 
     /**
      * 画分割线 如何画法可以在此方法中实现

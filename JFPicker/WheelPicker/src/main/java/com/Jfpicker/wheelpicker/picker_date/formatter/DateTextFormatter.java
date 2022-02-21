@@ -1,8 +1,8 @@
 package com.Jfpicker.wheelpicker.picker_date.formatter;
 
 /**
- * @author Created by JF on  2021/11/12 14:48
- * @description
+ * @author Created by JF on  2021/11/12
+ * @description 年月日增加后缀文字
  */
 
 public class DateTextFormatter extends DateFillZeroFormatter {

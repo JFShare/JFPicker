@@ -8,20 +8,44 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnHistorySearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="历史搜索">
-
-    </Button>
 
     <Button
-        android:id="@+id/btnAndroidPick"
+        android:id="@+id/btnDate"
+        style="@style/commonButton"
+        android:text="时间选择器"></Button>
+
+    <Button
+        android:id="@+id/btnCalendar"
+        style="@style/commonButton"
+        android:text="日历选择器"></Button>
+
+    <Button
+        android:id="@+id/btnOption"
+        style="@style/commonButton"
+        android:text="选项选择器"></Button>
+
+    <Button
+        android:id="@+id/btnAdress"
+        style="@style/commonButton"
+        android:text="地址选择器"></Button>
+
+    <Button
+        android:id="@+id/btnUpdateAllStyle"
+        style="@style/commonButton"
+        android:text="设置全部弹窗样式（除了自设置）"></Button>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="替换AndroidPick核心重新封装的滚轮选择器">
+        android:layout_marginTop="15dp"
+        android:lineSpacingExtra="3dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="所有弹窗WheelView 默认样式：\n
+        defaultWheel 默认的滚轮样式\n
+        defaultNoWheel 默认的非滚轮样式\n
+在自己项目的styles资源文件夹中 覆盖这两个样式，可以给所有弹窗的WheelView设置默认样式。\n
+当然单独设置的样式会覆盖默认样式">
 
-    </Button>
-
+    </TextView>
 </LinearLayout>

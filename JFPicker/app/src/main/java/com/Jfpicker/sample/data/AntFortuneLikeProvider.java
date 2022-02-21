@@ -6,10 +6,14 @@ import androidx.annotation.NonNull;
 
 
 import com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+/**
+ * 使用了AndroidPicker的演示代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 
 public class AntFortuneLikeProvider implements LinkageProvider {
 

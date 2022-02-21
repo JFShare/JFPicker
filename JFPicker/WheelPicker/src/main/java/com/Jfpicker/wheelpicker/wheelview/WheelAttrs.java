@@ -3,8 +3,8 @@ package com.Jfpicker.wheelpicker.wheelview;
 import android.graphics.Color;
 
 /**
- * @author Created by JF on  2021/11/9 17:07
- * @description
+ * @author Created by JF on  2021/11/10
+ * @description WheelView所有的属性类，默认样式
  */
 
 public class WheelAttrs {
@@ -21,7 +21,13 @@ public class WheelAttrs {
     private float gravityCoefficient = 0.75F;
     private boolean isWheel = true;
     private float itemDegreeTotal = 180.f;
+    private boolean alphaGradient = true;
+    private boolean isTextBlod = false;
+    private boolean isCenterTextBlod = false;
+    private boolean textSizeGradient = false;
+    private float minGradientTextSize = 10;
 
+    //非3D效果的WheelView默认样式
     public static WheelAttrs getDefaultNoWheelAttrs() {
         WheelAttrs wheelAttrs = new WheelAttrs();
         wheelAttrs.setWheel(false);
@@ -97,11 +103,37 @@ public class WheelAttrs {
             wheelAttrs.isWheel = isWheel;
             return this;
         }
+
         public Builder setItemDegreeTotal(float itemDegreeTotal) {
             wheelAttrs.itemDegreeTotal = itemDegreeTotal;
             return this;
         }
 
+
+        public Builder setAlphaGradient(boolean alphaGradient) {
+            wheelAttrs.alphaGradient = alphaGradient;
+            return this;
+        }
+
+        public Builder setTextBlod(boolean textBlod) {
+            wheelAttrs.isTextBlod = textBlod;
+            return this;
+        }
+
+        public Builder setCenterTextBlod(boolean centerTextBlod) {
+            wheelAttrs.isCenterTextBlod = centerTextBlod;
+            return this;
+        }
+
+        public Builder setTextSizeGradient(boolean textSizeGradient) {
+            wheelAttrs.textSizeGradient = textSizeGradient;
+            return this;
+        }
+
+        public Builder setMinGradientTextSize(float minGradientTextSize) {
+            wheelAttrs.minGradientTextSize = minGradientTextSize;
+            return this;
+        }
 
         public WheelAttrs build() {
             return wheelAttrs;
@@ -205,6 +237,47 @@ public class WheelAttrs {
 
     public void setItemDegreeTotal(float itemDegreeTotal) {
         this.itemDegreeTotal = itemDegreeTotal;
+    }
+
+
+    public boolean isAlphaGradient() {
+        return alphaGradient;
+    }
+
+    public void setAlphaGradient(boolean alphaGradient) {
+        this.alphaGradient = alphaGradient;
+    }
+
+    public boolean isTextBlod() {
+        return isTextBlod;
+    }
+
+    public void setTextBlod(boolean textBlod) {
+        isTextBlod = textBlod;
+    }
+
+    public boolean isCenterTextBlod() {
+        return isCenterTextBlod;
+    }
+
+    public void setCenterTextBlod(boolean centerTextBlod) {
+        isCenterTextBlod = centerTextBlod;
+    }
+
+    public boolean isTextSizeGradient() {
+        return textSizeGradient;
+    }
+
+    public void setTextSizeGradient(boolean textSizeGradient) {
+        this.textSizeGradient = textSizeGradient;
+    }
+
+    public float getMinGradientTextSize() {
+        return minGradientTextSize;
+    }
+
+    public void setMinGradientTextSize(float minGradientTextSize) {
+        this.minGradientTextSize = minGradientTextSize;
     }
 
 }

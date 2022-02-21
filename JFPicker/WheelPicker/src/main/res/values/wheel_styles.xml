@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="defaultFIOSWheel">
+    <style name="defaultWheel">
         <item name="wheelDividerColor">#dedede</item>
         <item name="wheelDividerSize">35dp</item>
         <item name="wheelItemCount">3</item>
@@ -12,6 +12,11 @@
         <item name="wheelTextSize">18sp</item>
         <item name="gravityCoefficient">0.75</item>
         <item name="isWheel">true</item>
+        <item name="alphaGradient">true</item>
+        <item name="isTextBlod">false</item>
+        <item name="isCenterTextBlod">false</item>
+        <item name="textSizeGradient">false</item>
+        <item name="minGradientTextSize">10dp</item>
     </style>
 
     <style name="defaultNoWheel">
@@ -25,6 +30,11 @@
         <item name="wheelTextSize">18sp</item>
         <item name="gravityCoefficient">0.75</item>
         <item name="isWheel">false</item>
+        <item name="alphaGradient">true</item>
+        <item name="isTextBlod">false</item>
+        <item name="isCenterTextBlod">false</item>
+        <item name="textSizeGradient">false</item>
+        <item name="minGradientTextSize">10dp</item>
     </style>
 
 </resources>

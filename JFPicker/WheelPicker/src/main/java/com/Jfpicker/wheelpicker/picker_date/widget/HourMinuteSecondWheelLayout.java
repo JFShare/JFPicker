@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * @author Created by JF on  2021/11/12 8:26
- * @description
+ * @description 时分秒选择布局
  */
 
 public class HourMinuteSecondWheelLayout extends LinearLayout {
@@ -48,6 +48,7 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
     private TimeFormatter formatter = new TimeFillZeroFormatter();
 
+    //设置显示格式化
     public void setFormatter(TimeFormatter formatter) {
         this.formatter = formatter;
         wheelViewHour.setFormatter(new WheelFormatter() {
@@ -121,6 +122,7 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
     public void initWheelView(int currentHour, int currentMiute, int currentSecond) {
 
+        //初始化时滚轮
         adapterHour = new WheelDataAdapter();
         adapterHour.strs.clear();
         for (int i = 0; i <= 23; i++) {
@@ -137,15 +139,15 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-                wheelViewMinute.setEnabled(!scrolling);
-                wheelViewSecond.setEnabled(!scrolling);
+//                wheelViewMinute.setEnabled(!scrolling);
+//                wheelViewSecond.setEnabled(!scrolling);
             }
 
         });
         wheelViewHour.setAdapter(adapterHour);
         wheelViewHour.setCurrentItem(indexHourChoose);
 
-
+        //初始化分滚轮
         adapterMinute = new WheelDataAdapter();
         adapterMinute.strs.clear();
         for (int i = 0; i <= 59; i++) {
@@ -163,13 +165,14 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-                wheelViewHour.setEnabled(!scrolling);
-                wheelViewSecond.setEnabled(!scrolling);
+//                wheelViewHour.setEnabled(!scrolling);
+//                wheelViewSecond.setEnabled(!scrolling);
             }
         });
         wheelViewMinute.setAdapter(adapterMinute);
         wheelViewMinute.setCurrentItem(indexMinuteChoose);
 
+        //初始化秒滚轮
         adapterSecond = new WheelDataAdapter();
         adapterSecond.strs.clear();
 
@@ -198,6 +201,7 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
     }
 
+    //设置显示模式
     public void setTimeMode(@TimeMode int timeMode) {
 
         this.timeMode = timeMode;

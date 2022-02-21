@@ -8,13 +8,14 @@ import androidx.annotation.NonNull;
 import com.Jfpicker.wheelpicker.picker_option.entity.OptionEntity;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnOptionPickedListener;
 import com.Jfpicker.wheelpicker.picker_option.widget.OptionWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
 
 import java.util.List;
 
 /**
- * @author Created by JF on  2021/11/13 9:36
- * @description
+ * @author Created by JF on  2021/11/13
+ * @description 单选滚轮弹窗
  */
 
 public class OptionPicker extends ModalDialog {
@@ -29,8 +30,18 @@ public class OptionPicker extends ModalDialog {
         super(activity);
     }
 
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
+    }
+
     public OptionPicker(@NonNull Activity activity, String title, List<OptionEntity> dataList) {
         super(activity);
+        this.title = title;
+        this.dataList = dataList;
+    }
+
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig, String title, List<OptionEntity> dataList) {
+        super(activity, dialogConfig);
         this.title = title;
         this.dataList = dataList;
     }
@@ -88,7 +99,7 @@ public class OptionPicker extends ModalDialog {
 
     public void setTitle(String title) {
         this.title = title;
-        if (initialized){
+        if (initialized) {
             titleView.setText(title);
         }
     }

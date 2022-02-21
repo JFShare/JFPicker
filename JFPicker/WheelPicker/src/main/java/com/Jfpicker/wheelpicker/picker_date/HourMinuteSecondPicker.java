@@ -8,19 +8,25 @@ import androidx.annotation.StyleRes;
 
 import com.Jfpicker.wheelpicker.picker_date.listener.OnTimePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
 
 /**
- * @author Created by JF on  2021/11/12 8:58
- * @description
+ * @author Created by JF on  2021/11/12
+ * @description 时分秒选择器
  */
 
 public class HourMinuteSecondPicker extends ModalDialog {
 
-    HourMinuteSecondWheelLayout wheelLayout;
-    OnTimePickedListener onTimePickedListener;
+    protected HourMinuteSecondWheelLayout wheelLayout;
+    private OnTimePickedListener onTimePickedListener;
+
     public HourMinuteSecondPicker(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public HourMinuteSecondPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
     }
 
     public HourMinuteSecondPicker(@NonNull Activity activity, @StyleRes int themeResId) {

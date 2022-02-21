@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@id/dialog_modal_title"
+    android:textSize="14sp"
+    android:textColor="@android:color/black"
+    android:textStyle="bold"
+    android:text="请选择日期"
+    android:gravity="center"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:layout_height="wrap_content">
+
+</TextView>

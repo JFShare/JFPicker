@@ -7,8 +7,8 @@ import android.view.MotionEvent;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * @author Created by JF on  2021/11/10 10:20
- * @description 可以禁用触摸事件的 RecyclerView
+ * @author Created by JF on  2021/11/10
+ * @description 可以禁用触摸事件的 RecyclerView,用于禁用WheelView
  */
 
 public class CScrollRecyclerView extends RecyclerView {
@@ -38,7 +38,6 @@ public class CScrollRecyclerView extends RecyclerView {
         }
 
     }
-
 
     public boolean isCanScroll() {
         return canScroll;

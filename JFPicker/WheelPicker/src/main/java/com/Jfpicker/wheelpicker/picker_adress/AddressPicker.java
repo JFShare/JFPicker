@@ -12,9 +12,8 @@ import com.Jfpicker.wheelpicker.picker_adress.contract.AddressParser;
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressReceiver;
 
 import com.Jfpicker.wheelpicker.picker_adress.contract.OnAddressPickedListener;
-import com.Jfpicker.wheelpicker.picker_adress.entity.CityEntity;
-import com.Jfpicker.wheelpicker.picker_adress.entity.CountyEntity;
-import com.Jfpicker.wheelpicker.picker_adress.entity.ProvinceEntity;
+import com.Jfpicker.wheelpicker.picker_adress.entity.AddressItemEntity;
+
 import com.Jfpicker.wheelpicker.picker_adress.formatter.AdressFormatter;
 import com.Jfpicker.wheelpicker.picker_adress.impl.AddressProvider;
 import com.Jfpicker.wheelpicker.picker_adress.impl.AssetAddressLoader;
@@ -22,22 +21,30 @@ import com.Jfpicker.wheelpicker.picker_adress.utility.AddressJsonParser;
 import com.Jfpicker.wheelpicker.picker_option.LinkagePicker;
 import com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnLinkagePickedListener;
+import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
 import com.Jfpicker.wheelpicker.wheel_dialog.DialogLog;
 
 
 import java.util.List;
 
-
+/**
+ * 地址滚轮选择器
+ * 使用了AndroidPicker的地址加载代码
+ * 源码地址：https://github.com/gzu-liyujiang/AndroidPicker
+ */
 @SuppressWarnings({"unused"})
 public class AddressPicker extends LinkagePicker implements AddressReceiver {
     private AddressLoader addressLoader;
     private AddressParser addressParser;
     private int addressMode;
     private OnAddressPickedListener onAddressPickedListener;
-//    private OnAddressLoadListener onAddressLoadListener;
 
     public AddressPicker(@NonNull Activity activity) {
         super(activity);
+    }
+
+    public AddressPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
     }
 
     public AddressPicker(@NonNull Activity activity, @StyleRes int themeResId) {
@@ -55,7 +62,7 @@ public class AddressPicker extends LinkagePicker implements AddressReceiver {
     protected void initData() {
         super.initData();
         if (addressLoader == null || addressParser == null) {
-            return;
+            setAddressMode(AddressMode.PROVINCE_CITY_COUNTY);
         }
         wheelLayout.showLoading();
 
@@ -64,7 +71,7 @@ public class AddressPicker extends LinkagePicker implements AddressReceiver {
     }
 
     @Override
-    public void onAddressReceived(@NonNull List<ProvinceEntity> data) {
+    public void onAddressReceived(@NonNull List<AddressItemEntity> data) {
         DialogLog.print("Address data received");
         wheelLayout.hideLoading();
 
@@ -86,9 +93,9 @@ public class AddressPicker extends LinkagePicker implements AddressReceiver {
     @Override
     protected void onOk() {
         if (onAddressPickedListener != null) {
-            ProvinceEntity province = (ProvinceEntity) wheelLayout.getSelectFirst();
-            CityEntity city = (CityEntity) wheelLayout.getSelectSecond();
-            CountyEntity county = (CountyEntity) wheelLayout.getSelectThird();
+            AddressItemEntity province = (AddressItemEntity) wheelLayout.getSelectFirst();
+            AddressItemEntity city = (AddressItemEntity) wheelLayout.getSelectSecond();
+            AddressItemEntity county = (AddressItemEntity) wheelLayout.getSelectThird();
             onAddressPickedListener.onAddressPicked(province, city, county);
         }
     }
@@ -118,4 +125,7 @@ public class AddressPicker extends LinkagePicker implements AddressReceiver {
         setAddressLoader(new AssetAddressLoader(getContext(), assetPath), jsonParser);
     }
 
+    public void setDefaultValue(String province, String city, String county) {
+        wheelLayout.setDefaultValue(province, city, county);
+    }
 }

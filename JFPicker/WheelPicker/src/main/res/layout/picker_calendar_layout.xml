@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlTitlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp">
+
+        <LinearLayout
+            android:id="@+id/llCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center"
+            android:minWidth="40dp"
+            android:minHeight="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:id="@+id/tvCancel"
+                android:visibility="gone"
+                android:textColor="#999999"
+                android:textSize="15sp">
+
+            </TextView>
+
+            <ImageView
+                android:id="@+id/ivCancel"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/calendar_picker_cancel">
+
+            </ImageView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:minHeight="40dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llPre"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivPre"
+                    android:layout_width="15dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/calendar_picker_pre_page" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="当前时间"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/llNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivNext"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/calendar_picker_next_page" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:minWidth="40dp"
+            android:minHeight="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确定"
+                android:visibility="gone"
+                android:id="@+id/tvSure"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/ivSure"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/sure">
+
+            </ImageView>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.haibin.calendarview.CalendarView
+        android:id="@id/my_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        app:calendar_height="56dp"
+        app:day_text_size="16sp"
+        app:lunar_text_size="10sp"
+        app:max_year="2099"
+        app:max_year_month="12"
+        app:min_year="2012"
+        app:min_year_month="1"
+        app:month_view="com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultSingleMonthView"
+        app:month_view_show_mode="mode_only_current"
+        app:select_mode="single_mode"
+        app:week_bar_view="com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultWeekBar"
+        app:week_start_with="sun" />
+
+    <View
+        android:id="@+id/viewBottom"
+        android:layout_width="match_parent"
+        android:layout_height="10dp">
+
+    </View>
+</LinearLayout>

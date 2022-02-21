@@ -3,44 +3,77 @@ package com.Jfpicker.wheelpicker.wheelview;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-
+import android.graphics.Typeface;
+import android.util.Log;
 
 import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
 
+
+/**
+ * @author Created by JF on  2021/11/10
+ * @description 继承自WheelDecoration，主要实现绘制文字效果。
+ */
+
 class SimpleWheelDecoration extends WheelDecoration {
     /**
-     * wheel item颜色与中心选中时的颜色
+     * 文字颜色，选中文字颜色
      */
     private int textColor, textColorCenter;
-
-    private int dividerSize;
     /**
-     * 画文本居中时文本画笔的高度
+     * 文字是否加粗，选中文字是否加粗
      */
+    private boolean isTextBlod, isCenterTextBlod;
+
+    /**
+     * 文字大小
+     */
+    private float textSize;
+    /**
+     * 是否文字大小渐变
+     */
+    private boolean textSizeGradient;
+    /**
+     * 支持文字渐变时最小的文字大小
+     */
+    private float minGradientTextSize;
+    /**
+     * 文字位置
+     */
+    private int gravity_text;
+
+    /**
+     * 选中区域大小
+     */
+    private int dividerSize;
+
     private float textHeight;
     /**
-     * wheel paint, dividerPaint
+     * 文字画笔
      */
     private Paint paint, dividerPaint;
 
+    /**
+     * Adapter
+     */
     private WheelViewAdapter adapter;
 
-    private int gravity_text;
-
-    private float itemDegreeTotal;
-
+    /**
+     * 显示文字格式化
+     */
     private WheelFormatter formatter;
+
     public static String ELLIPSISTEXT = "...";
-    private float ellipsisLength = 0;
+
 
     public void setFormatter(WheelFormatter formatter) {
         this.formatter = formatter;
     }
 
     SimpleWheelDecoration(WheelViewAdapter adapter, WheelFormatter formatter, int gravity, float gravityCoefficient, boolean isWheel,
-                          int gravity_text, int textColor,
-                          int textColorCenter, float textSize, int dividerColor, int dividerSize, float itemDegreeTotal) {
-        super(adapter.itemCount, adapter.itemSize, gravity, gravityCoefficient, isWheel, itemDegreeTotal);
+                          int gravity_text, int textColor, int textColorCenter, float textSize, int dividerColor, int dividerSize,
+                          float itemDegreeTotal, boolean alphaGradient, boolean isTextBlod, boolean isCenterTextBlod,
+                          boolean textSizeGradient, float minGradientTextSize) {
+        super(adapter.itemCount, adapter.itemSize, gravity, gravityCoefficient, isWheel, itemDegreeTotal, alphaGradient);
 
         this.formatter = formatter;
         this.gravity_text = gravity_text;
@@ -48,38 +81,53 @@ class SimpleWheelDecoration extends WheelDecoration {
         this.textColorCenter = textColorCenter;
         this.dividerSize = dividerSize;
         this.adapter = adapter;
+        this.isTextBlod = isTextBlod;
+        this.isCenterTextBlod = isCenterTextBlod;
+        this.textSize = textSize;
+        this.textSizeGradient = textSizeGradient;
+        this.minGradientTextSize = minGradientTextSize;
 
         this.paint = new Paint();
         paint.setAntiAlias(true);
         paint.setTextSize(textSize);
         paint.setTextAlign(Paint.Align.CENTER);
-        Paint.FontMetrics fm = paint.getFontMetrics();
-        textHeight = (fm.bottom + fm.top) / 2.0f;
 
         dividerPaint = new Paint();
         dividerPaint.setAntiAlias(true);
         dividerPaint.setColor(dividerColor);
 
-        ellipsisLength = paint.measureText(ELLIPSISTEXT);
     }
 
 
     @Override
-    void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical) {
+    void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical, float textSizeP) {
+
+        paint.setColor(isCenterItem ? textColorCenter : textColor);
+        if (isCenterItem) {
+            paint.setTypeface(isCenterTextBlod ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        } else {
+            paint.setTypeface(isTextBlod ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        }
+
+        paint.setAlpha(alpha);
+        float realTextSize = textSize;
+        if (textSizeGradient) {
+            realTextSize = minGradientTextSize + ((textSize - minGradientTextSize) * textSizeP);
+        }
+        paint.setTextSize(realTextSize);
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        textHeight = (fm.bottom + fm.top) / 2.0f;
 
 
         String s = adapter.getItemString(position).toString();
         if (formatter != null) {
             s = formatter.formatItem(adapter.getItemString(position));
         }
-
         String ellipsisText = getEllipsisText(s, rect);
         if (!s.equals(ellipsisText)) {
             s = getEllipsisAppendText(ellipsisText, rect) + ELLIPSISTEXT;
         }
 
-        paint.setColor(isCenterItem ? textColorCenter : textColor);
-        paint.setAlpha(alpha);
         if (gravity_text == GRAVITY_LEFT) {
             //在rect区域内画左边居中文字
             c.drawText(s, 0, rect.exactCenterY() - textHeight, paint);
@@ -113,6 +161,7 @@ class SimpleWheelDecoration extends WheelDecoration {
         }
     }
 
+    //非常简单的计算了省略号的显示
     public String getEllipsisText(String text, Rect rect) {
         if (paint.measureText(text) - (rect.right - rect.left) > 0) {
             int length = text.length();

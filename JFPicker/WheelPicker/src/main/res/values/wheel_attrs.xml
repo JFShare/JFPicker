@@ -43,8 +43,24 @@
         <!-- 两根分割线的距离 -->
         <attr name="wheelDividerSize" format="dimension" />
 
-        <!-- 是不是仿ios的滚轮 -->
+        <!-- 是否支持3D旋转效果 -->
         <attr name="isWheel" format="boolean"></attr>
+
+        <!-- 文字是否加粗，不包含选中文字 -->
+        <attr name="isTextBlod" format="boolean"></attr>
+
+        <!-- 选中文字是否加粗 -->
+        <attr name="isCenterTextBlod" format="boolean"></attr>
+
+        <!-- 是否支持文字透明度渐变 从中间到两边逐渐透明 -->
+        <attr name="alphaGradient" format="boolean"></attr>
+
+        <!-- 是否支持文字大小渐变 从中间到两边逐渐变小 -->
+        <attr name="textSizeGradient" format="boolean"></attr>
+
+        <!-- 文字大小渐变 最小的文字尺寸基础-->
+        <attr name="minGradientTextSize" format="dimension"></attr>
+
 
     </declare-styleable>
 

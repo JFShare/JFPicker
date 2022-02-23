@@ -1,14 +1,26 @@
 # JFPicker
 
 # 一、项目的由来
-
+Android 萌新，人菜技术菜，努力生活
 **参考开源库： 安卓选择器类库：https://github.com/gzu-liyujiang/AndroidPicker**
 AndroidPicker的选择器功能强大而完善，感谢大神开源的代码。
 AndroidPicker基本能满足日常开发工作，但为了更快的使用公司规定而固定的选择器样式，比如选择年月以后月日不重置到0的日期选择器、选择时分后分秒不会重置到0的时间选择器，
 年日具有左右倾斜效果的日期选择器、文字大小渐变的日期选择器，列表和固定长度列表样式的单选选择器、五级以内的网络请求选择器、ViewPager样式的地址选择器等等。
 在阅读AndroidPicker源码后，站在巨人的肩膀上。
 **仅为固定公司选择器样式快速开发日常项目而进行的封装，希望可以对大家有所帮助，提供思路与便捷。 如有问题，请gitbub留言联系**
-
+**如何使用**
+项目已上传jitPack
+```html
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+		dependencies {
+    	        implementation 'com.github.JFShare:JFPicker:Tag'
+    	}
+```
 # 二、封装的主要内容
 
 1. **核心滚轮控件改为 由 RecyclerView 和 RecyclerView.ItemDecoration 绘制的的滚轮控件（代码来自同事的分享并更改，应该是网上大神分享的代码，如知道来源请留言）**：

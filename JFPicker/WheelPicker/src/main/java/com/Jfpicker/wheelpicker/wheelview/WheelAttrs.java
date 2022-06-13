@@ -2,175 +2,152 @@ package com.Jfpicker.wheelpicker.wheelview;
 
 import android.graphics.Color;
 
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
+import com.Jfpicker.wheelpicker.wheelview.format.AlphaGradientListener;
+import com.Jfpicker.wheelpicker.wheelview.format.TextSizeGradientListener;
+
 /**
  * @author Created by JF on  2021/11/10
- * @description WheelView所有的属性类，默认样式
+ * @description WheelView所有的属性类，提供默认样式
  */
 
 public class WheelAttrs {
 
-    private int dividerColor = Color.parseColor("#dedede");
-    private float dividerSize = 35;
-    private int itemCount = 3;
-    private float itemSize = 35;
-    private int textColor = Color.parseColor("#999999");
-    private int textColorCenter = Color.parseColor("#333333");
-    private int wheelGravity = WheelDecoration.GRAVITY_CENTER;
-    private int textGravity = WheelDecoration.GRAVITY_CENTER;
-    private float textSize = 18;
-    private float gravityCoefficient = 0.75F;
+
+    /*
+     * 间隔区域背景：间隔线、矩形
+     */
+    public static final int DIVIDER_LINE = 1;
+    public static final int DIVIDER_RECTANGLE = 2;
+
+    public static final int DEFAULT_SIZE = 100;
+    public static final float DEFAULT_TEXT_SIZE = 50;
+    public static final int DEFAULT_TEXT_COLOR = Color.parseColor("#333333");
+    public static final int DEFAULT_DIVIDER_BG_COLOR = Color.parseColor("#00000000");
+    public static final int DEFAULT_DIVIDER_COLOR = Color.parseColor("#dedede");
+
+    /*
+     * 滚轮样式相关==========================
+     */
+
+    //是否滚轮样式，等于false即列表平铺
     private boolean isWheel = true;
+    //是否使用画布偏移，取消画布Y轴Z轴偏移会对滚轮的立体视觉效果产生影响
+    private boolean translateYZ = true;
+    // 滚轮总角度，决定滚轮的弯曲程度，0 < itemDegreeTotal <= 180
     private float itemDegreeTotal = 180.f;
-    private boolean alphaGradient = true;
-    private boolean isTextBlod = false;
-    private boolean isCenterTextBlod = false;
-    private boolean textSizeGradient = false;
-    private float minGradientTextSize = 10;
+    // 除了选中项以外，上下各有几项，总数量为 wheelItemCount * 2 + 1
+    private int halfItemCount = 3;
+    /*
+         每一项的高度，px,如果使用滚轮效果，因为画布偏移，会造成上下区域的一定留白，
+         如果不想留白，
+         需要设置 isWheel=false取消滚轮效果，
+         或者 设置 translateYZ=false 取消画布Y轴Z轴偏移，取消画布Y轴Z轴偏移会对滚轮的立体视觉效果产生影响
+     */
+    private int itemSize = DEFAULT_SIZE;
 
-    //非3D效果的WheelView默认样式
-    public static WheelAttrs getDefaultNoWheelAttrs() {
-        WheelAttrs wheelAttrs = new WheelAttrs();
-        wheelAttrs.setWheel(false);
-        wheelAttrs.setDividerSize(50);
-        wheelAttrs.setItemSize(50);
-        wheelAttrs.setItemCount(2);
-        return wheelAttrs;
+    /*
+     * 滚轮字体相关==========================
+     */
+
+    //字体颜色
+    private int textColor = DEFAULT_TEXT_COLOR;
+    //选中项字体颜色
+    private int checkedTextColor = DEFAULT_TEXT_COLOR;
+    //字体大小,px
+    private float textSize = DEFAULT_TEXT_SIZE;
+    //选中项字体大小，px,字体大小格式化接口标准大小,
+    private float checkedTextSize = DEFAULT_TEXT_SIZE;
+    //字体是否加粗
+    private boolean isTextBold = false;
+    //选中项字体是否加粗
+    private boolean isCheckedTextBold = false;
+
+
+    /*
+     * 滚轮间隔线相关==========================
+     */
+
+    //间隔背景样式：间隔线、矩形
+    private int dividerType = DIVIDER_LINE;
+    //间隔之间的宽度 px
+    private float dividerSize = DEFAULT_SIZE;
+    //间隔背景色
+    private int dividerBgColor = DEFAULT_DIVIDER_BG_COLOR;
+    //间隔线颜色
+    private int dividerColor = DEFAULT_DIVIDER_COLOR;
+    //间隔线宽度，px,默认1px宽
+    private int dividerStrokeWidth = 1;
+    //间隔线、间隔矩形 圆角大小 px
+    private int dividerCorner = 0;
+
+    /*
+     * 滚轮接口相关==========================
+     */
+
+    /*
+        字体透明度渐变格式化接口, int onGradient(int position),
+        position是位置，选中项是0，选中项上方为+1 +2 +3 ...，下方为 -1 -2 -3 ...
+     */
+    private AlphaGradientListener alphaFormat;
+    /*
+        字体大小渐变格式化接口,float onGradient(float StandardSize, int position)
+        StandardSize即checkedTextSize，sp,
+        position是位置，选中项是0，选中项上方为+1 +2 +3 ...，下方为 -1 -2 -3 ...
+     */
+    private TextSizeGradientListener textSizeFormat;
+
+    /*
+        显示内容格式化接口 String formatItem(@NonNull Object item)
+        item是设置的滚轮数据
+     */
+    private WheelFormatListener formatter;
+
+    public boolean isWheel() {
+        return isWheel;
     }
 
-    public static class Builder {
-        WheelAttrs wheelAttrs;
-
-        public Builder() {
-            wheelAttrs = new WheelAttrs();
-        }
-
-        public Builder getDefaultNoWheelAttrs() {
-            wheelAttrs = WheelAttrs.getDefaultNoWheelAttrs();
-            return this;
-        }
-
-        public Builder setDividerColor(int dividerColor) {
-            wheelAttrs.dividerColor = dividerColor;
-            return this;
-        }
-
-        public Builder setDividerSize(float dividerSize) {
-            wheelAttrs.dividerSize = dividerSize;
-            return this;
-        }
-
-        public Builder setItemCount(int itemCount) {
-            wheelAttrs.itemCount = itemCount;
-            return this;
-        }
-
-        public Builder setItemSize(float itemSize) {
-            wheelAttrs.itemSize = itemSize;
-            return this;
-        }
-
-        public Builder setTextColor(int textColor) {
-            wheelAttrs.textColor = textColor;
-            return this;
-        }
-
-        public Builder setTextColorCenter(int textColorCenter) {
-            wheelAttrs.textColorCenter = textColorCenter;
-            return this;
-        }
-
-        public Builder setWheelGravity(int wheelGravity) {
-            wheelAttrs.wheelGravity = wheelGravity;
-            return this;
-        }
-
-        public Builder setTextGravity(int textGravity) {
-            wheelAttrs.textGravity = textGravity;
-            return this;
-        }
-
-        public Builder setTextSize(float textSize) {
-            wheelAttrs.textSize = textSize;
-            return this;
-        }
-
-        public Builder setGravityCoefficient(float gravityCoefficient) {
-            wheelAttrs.gravityCoefficient = gravityCoefficient;
-            return this;
-        }
-
-        public Builder setIsWheel(boolean isWheel) {
-            wheelAttrs.isWheel = isWheel;
-            return this;
-        }
-
-        public Builder setItemDegreeTotal(float itemDegreeTotal) {
-            wheelAttrs.itemDegreeTotal = itemDegreeTotal;
-            return this;
-        }
-
-
-        public Builder setAlphaGradient(boolean alphaGradient) {
-            wheelAttrs.alphaGradient = alphaGradient;
-            return this;
-        }
-
-        public Builder setTextBlod(boolean textBlod) {
-            wheelAttrs.isTextBlod = textBlod;
-            return this;
-        }
-
-        public Builder setCenterTextBlod(boolean centerTextBlod) {
-            wheelAttrs.isCenterTextBlod = centerTextBlod;
-            return this;
-        }
-
-        public Builder setTextSizeGradient(boolean textSizeGradient) {
-            wheelAttrs.textSizeGradient = textSizeGradient;
-            return this;
-        }
-
-        public Builder setMinGradientTextSize(float minGradientTextSize) {
-            wheelAttrs.minGradientTextSize = minGradientTextSize;
-            return this;
-        }
-
-        public WheelAttrs build() {
-            return wheelAttrs;
-        }
-
+    public void setWheel(boolean wheel) {
+        isWheel = wheel;
     }
 
-
-    public int getDividerColor() {
-        return dividerColor;
+    public boolean isTranslateYZ() {
+        return translateYZ;
     }
 
-    public void setDividerColor(int dividerColor) {
-        this.dividerColor = dividerColor;
+    public void setTranslateYZ(boolean translateYZ) {
+        this.translateYZ = translateYZ;
     }
 
-    public float getDividerSize() {
-        return dividerSize;
+    public float getItemDegreeTotal() {
+        return itemDegreeTotal;
     }
 
-    public void setDividerSize(float dividerSize) {
-        this.dividerSize = dividerSize;
+    public void setItemDegreeTotal(float itemDegreeTotal) {
+        if (itemDegreeTotal <= 0) {
+            this.itemDegreeTotal = 1;
+            return;
+        }
+        if (itemDegreeTotal > 180) {
+            this.itemDegreeTotal = 180;
+            return;
+        }
+        this.itemDegreeTotal = itemDegreeTotal;
     }
 
-    public int getItemCount() {
-        return itemCount;
+    public int getHalfItemCount() {
+        return halfItemCount;
     }
 
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
+    public void setHalfItemCount(int halfItemCount) {
+        this.halfItemCount = halfItemCount;
     }
 
-    public float getItemSize() {
+    public int getItemSize() {
         return itemSize;
     }
 
-    public void setItemSize(float itemSize) {
+    public void setItemSize(int itemSize) {
         this.itemSize = itemSize;
     }
 
@@ -182,28 +159,12 @@ public class WheelAttrs {
         this.textColor = textColor;
     }
 
-    public int getTextColorCenter() {
-        return textColorCenter;
+    public int getCheckedTextColor() {
+        return checkedTextColor;
     }
 
-    public void setTextColorCenter(int textColorCenter) {
-        this.textColorCenter = textColorCenter;
-    }
-
-    public int getWheelGravity() {
-        return wheelGravity;
-    }
-
-    public void setWheelGravity(int wheelGravity) {
-        this.wheelGravity = wheelGravity;
-    }
-
-    public int getTextGravity() {
-        return textGravity;
-    }
-
-    public void setTextGravity(int textGravity) {
-        this.textGravity = textGravity;
+    public void setCheckedTextColor(int checkedTextColor) {
+        this.checkedTextColor = checkedTextColor;
     }
 
     public float getTextSize() {
@@ -214,70 +175,117 @@ public class WheelAttrs {
         this.textSize = textSize;
     }
 
-    public float getGravityCoefficient() {
-        return gravityCoefficient;
+    public float getCheckedTextSize() {
+        return checkedTextSize;
     }
 
-    public void setGravityCoefficient(float gravityCoefficient) {
-        this.gravityCoefficient = gravityCoefficient;
+    public void setCheckedTextSize(float checkedTextSize) {
+        this.checkedTextSize = checkedTextSize;
     }
 
-    public boolean isWheel() {
-        return isWheel;
+    public boolean isTextBold() {
+        return isTextBold;
     }
 
-    public void setWheel(boolean wheel) {
-        isWheel = wheel;
+    public void setTextBold(boolean textBold) {
+        isTextBold = textBold;
+    }
+
+    public boolean isCheckedTextBold() {
+        return isCheckedTextBold;
+    }
+
+    public void setCheckedTextBold(boolean checkedTextBold) {
+        isCheckedTextBold = checkedTextBold;
     }
 
 
-    public float getItemDegreeTotal() {
-        return itemDegreeTotal;
+    public int getDividerType() {
+        return dividerType;
     }
 
-    public void setItemDegreeTotal(float itemDegreeTotal) {
-        this.itemDegreeTotal = itemDegreeTotal;
+    public void setDividerType(int dividerType) {
+        this.dividerType = dividerType;
+    }
+
+    public float getDividerSize() {
+        return dividerSize;
+    }
+
+    public void setDividerSize(float dividerSize) {
+        this.dividerSize = dividerSize;
+    }
+
+    public int getDividerBgColor() {
+        return dividerBgColor;
+    }
+
+    public void setDividerBgColor(int dividerBgColor) {
+        this.dividerBgColor = dividerBgColor;
+    }
+
+    public int getDividerColor() {
+        return dividerColor;
+    }
+
+    public void setDividerColor(int dividerColor) {
+        this.dividerColor = dividerColor;
+    }
+
+    public int getDividerStrokeWidth() {
+        return dividerStrokeWidth;
+    }
+
+    public void setDividerStrokeWidth(int dividerStrokeWidth) {
+        this.dividerStrokeWidth = dividerStrokeWidth;
+    }
+
+    public int getDividerCorner() {
+        return dividerCorner;
+    }
+
+    public void setDividerCorner(int dividerCorner) {
+        this.dividerCorner = dividerCorner;
     }
 
 
-    public boolean isAlphaGradient() {
-        return alphaGradient;
+    public AlphaGradientListener getAlphaFormat() {
+        return alphaFormat;
     }
 
-    public void setAlphaGradient(boolean alphaGradient) {
-        this.alphaGradient = alphaGradient;
+    public void setAlphaFormat(AlphaGradientListener alphaFormat) {
+        this.alphaFormat = alphaFormat;
     }
 
-    public boolean isTextBlod() {
-        return isTextBlod;
+    public TextSizeGradientListener getTextSizeFormat() {
+        return textSizeFormat;
     }
 
-    public void setTextBlod(boolean textBlod) {
-        isTextBlod = textBlod;
+    public void setTextSizeFormat(TextSizeGradientListener textSizeFormat) {
+        this.textSizeFormat = textSizeFormat;
     }
 
-    public boolean isCenterTextBlod() {
-        return isCenterTextBlod;
+    public WheelFormatListener getFormatter() {
+        return formatter;
     }
 
-    public void setCenterTextBlod(boolean centerTextBlod) {
-        isCenterTextBlod = centerTextBlod;
+    public void setFormatter(WheelFormatListener formatter) {
+        this.formatter = formatter;
     }
 
-    public boolean isTextSizeGradient() {
-        return textSizeGradient;
+    //滚轮默认样式
+    public static WheelAttrs getDefault() {
+        return new WheelAttrs();
     }
 
-    public void setTextSizeGradient(boolean textSizeGradient) {
-        this.textSizeGradient = textSizeGradient;
-    }
-
-    public float getMinGradientTextSize() {
-        return minGradientTextSize;
-    }
-
-    public void setMinGradientTextSize(float minGradientTextSize) {
-        this.minGradientTextSize = minGradientTextSize;
+    //非滚轮的默认样式
+    public static WheelAttrs getDefaultNoWheel() {
+        WheelAttrs wheelAttrs = new WheelAttrs();
+        wheelAttrs.setWheel(false);
+        wheelAttrs.setDividerSize(130);
+        wheelAttrs.setItemSize(130);
+        wheelAttrs.setHalfItemCount(2);
+        return wheelAttrs;
     }
 
 }

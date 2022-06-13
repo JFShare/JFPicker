@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.Jfpicker.wheelpicker.picker_adress.contract.AddressParser;
 
 import com.Jfpicker.wheelpicker.picker_adress.entity.AddressItemEntity;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogLog;
+import com.Jfpicker.wheelpicker.utils.WheelLogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +39,7 @@ public class AddressJsonParser implements AddressParser {
             JSONArray provinceArray = new JSONArray(text);
             return parseProvince(provinceArray);
         } catch (JSONException e) {
-            DialogLog.print(e);
+            WheelLogUtils.print(e);
         }
         return new ArrayList<>();
     }

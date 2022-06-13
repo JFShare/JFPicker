@@ -5,16 +5,17 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 
 import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarMultiPickedListener;
 import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarPickedListener;
 import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarRangePickedListener;
 import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarTitleListener;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 /**
- * @author Created by linyincongxingkeji on  2021/11/24
+ * @author Created by JF on  2021/11/24
  * @description 公司样式的日历选择弹窗
  */
 
@@ -35,9 +36,19 @@ public class CalendarPicker extends ModalDialog {
         super(activity, themeResId);
     }
 
+    public CalendarPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
     @Nullable
     @Override
     protected View createTopLineView() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public View createTitleView() {
         return null;
     }
 
@@ -78,7 +89,7 @@ public class CalendarPicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
 
     }
 
@@ -93,9 +104,11 @@ public class CalendarPicker extends ModalDialog {
     public void setSelectMultiMode(int size) {
         calendarLayout.setSelectMultiMode(size);
     }
-    public void setSelectRangeMode(){
+
+    public void setSelectRangeMode() {
         calendarLayout.setSelectRangeMode();
     }
+
     public void setOnCalendarPickedListener(OnCalendarPickedListener onCalendarPickedListener) {
         calendarLayout.setOnCalendarPickedListener(onCalendarPickedListener);
     }
@@ -103,6 +116,7 @@ public class CalendarPicker extends ModalDialog {
     public void setOnCalendarMultiPickedListener(OnCalendarMultiPickedListener onCalendarMultiPickedListener) {
         calendarLayout.setOnCalendarMultiPickedListener(onCalendarMultiPickedListener);
     }
+
     public void setOnCalendarRangePickedListener(OnCalendarRangePickedListener onCalendarRangePickedListener) {
         calendarLayout.setOnCalendarRangePickedListener(onCalendarRangePickedListener);
     }

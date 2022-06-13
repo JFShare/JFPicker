@@ -1,58 +1,49 @@
 package com.Jfpicker.wheelpicker.wheelview;
+
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-class WheelViewAdapter extends RecyclerView.Adapter<WheelViewHolder> {
+class WheelViewAdapter extends RecyclerView.Adapter<WheelViewAdapter.WheelViewHolder> {
 
-    /**
-     * recyclerview 布局方向
-     */
-    final int orientation;
+    WheelDataAbstractAdapter adapter;
+    private WheelAttrs attrs;
 
-    /**
-     * 每个item大小
-     */
-    final int itemSize;
-    /**
-     * wheelview 滑动时上或下的空白数量
-     */
-    final int itemCount;
-    /**
-     * wheelview 滑动时上或下空白总数量
-     */
-    private int totalItemCount;
-
-
-    WheelView.WheelDataAbstractAdapter adapter;
-
-    WheelViewAdapter(int orientation, int itemSize, int itemCount) {
-        this.orientation = orientation;
-        this.itemSize = itemSize;
-        this.itemCount = itemCount;
-        this.totalItemCount = itemCount * 2;
+    WheelViewAdapter(WheelAttrs attrs) {
+        this.attrs = attrs;
     }
 
     @Override
-    public void onBindViewHolder(WheelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WheelViewHolder holder, int position) {
     }
 
     @Override
     public int getItemCount() {
-        return totalItemCount + (adapter == null ? 0 : adapter.getItemCount());
+        return attrs.getHalfItemCount() * 2 + (adapter == null ? 0 : adapter.getItemCount());
     }
 
+    @NonNull
     @Override
-    public WheelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WheelViewAdapter.WheelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = new View(parent.getContext());
-        view.setLayoutParams(WheelUtils.createLayoutParams(orientation, itemSize));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                attrs.getItemSize());
+        view.setLayoutParams(params);
         return new WheelViewHolder(view);
     }
 
     Object getItemString(int index) {
         return adapter == null ? "" : adapter.getItem(index);
+    }
+
+
+    class WheelViewHolder extends RecyclerView.ViewHolder {
+        WheelViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
 }

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rlTitlebar"
+        android:id="@+id/rlTitleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
@@ -22,19 +22,8 @@
             android:minWidth="40dp"
             android:minHeight="40dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="取消"
-                android:id="@+id/tvCancel"
-                android:visibility="gone"
-                android:textColor="#999999"
-                android:textSize="15sp">
-
-            </TextView>
-
             <ImageView
-                android:id="@+id/ivCancel"
+
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:src="@drawable/calendar_picker_cancel">
@@ -51,7 +40,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/llPre"
+                android:id="@+id/llPreMonth"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:gravity="center">
@@ -76,13 +65,13 @@
                 android:textSize="18sp" />
 
             <LinearLayout
-                android:id="@+id/llNext"
+                android:id="@+id/llNextMonth"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/ivNext"
+
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@drawable/calendar_picker_next_page" />
@@ -100,20 +89,10 @@
             android:minWidth="40dp"
             android:minHeight="40dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="确定"
-                android:visibility="gone"
-                android:id="@+id/tvSure"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
             <ImageView
-                android:id="@+id/ivSure"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@drawable/sure">
+                android:src="@drawable/calendar_picker_sure">
 
             </ImageView>
         </LinearLayout>
@@ -128,18 +107,15 @@
         app:calendar_height="56dp"
         app:day_text_size="16sp"
         app:lunar_text_size="10sp"
-        app:max_year="2099"
+        app:max_year="2100"
         app:max_year_month="12"
-        app:min_year="2012"
+        app:min_year="1900"
         app:min_year_month="1"
-        app:month_view="com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultSingleMonthView"
         app:month_view_show_mode="mode_only_current"
         app:select_mode="single_mode"
-        app:week_bar_view="com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultWeekBar"
         app:week_start_with="sun" />
 
     <View
-        android:id="@+id/viewBottom"
         android:layout_width="match_parent"
         android:layout_height="10dp">
 

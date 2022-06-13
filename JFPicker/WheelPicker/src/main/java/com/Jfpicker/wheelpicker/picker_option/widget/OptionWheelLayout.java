@@ -4,18 +4,18 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.Jfpicker.wheelpicker.R;
 
-import com.Jfpicker.wheelpicker.picker_base.WheelDataAdapter;
-import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
+import com.Jfpicker.wheelpicker.wheelview.WheelDataAdapter;
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 import com.Jfpicker.wheelpicker.picker_option.entity.OptionEntity;
 import com.Jfpicker.wheelpicker.picker_option.formatter.OptionFormatter;
 import com.Jfpicker.wheelpicker.wheelview.WheelView;
+import com.Jfpicker.wheelpicker.wheelview.listener.OnWheelScrollListener;
 
 import java.util.List;
 
@@ -27,61 +27,60 @@ import java.util.List;
 public class OptionWheelLayout extends LinearLayout {
 
     private WheelView wheelOption;
-    private TextView tvOptionLabel;
+
     private WheelDataAdapter adapterOption;
-
-    private int indexOptionChooose = -1;
-
-    private OptionFormatter formatter = new OptionFormatter();
+    private OnWheelScrollListener onWheelScrollListener;
 
     public OptionWheelLayout(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public OptionWheelLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public OptionWheelLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context);
     }
 
     public OptionWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context) {
         setOrientation(VERTICAL);
         inflate(context, R.layout.wheel_picker_option, this);
-        onInit(context);
+        onInit();
     }
 
-    private void onInit(@NonNull Context context) {
+    private void onInit() {
         wheelOption = findViewById(R.id.wheelOption);
-        tvOptionLabel = findViewById(R.id.tvOptionLabel);
-        setFormatter(formatter);
+        setFormatter(new OptionFormatter());
     }
 
     //设置数据
     public void setWheelData(List<OptionEntity> list) {
 
-        indexOptionChooose = -1;
         adapterOption = new WheelDataAdapter();
-        adapterOption.strs.clear();
-        adapterOption.strs.addAll(list);
-        wheelOption.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        adapterOption.objects.clear();
+        adapterOption.objects.addAll(list);
+        wheelOption.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
-
+            public void onItemChecked(WheelView wv, int index) {
+                if (onWheelScrollListener != null) {
+                    onWheelScrollListener.onItemChecked(wv, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-
+                if (onWheelScrollListener != null) {
+                    onWheelScrollListener.onScrollStatusChange(scrolling);
+                }
             }
 
         });
@@ -92,8 +91,8 @@ public class OptionWheelLayout extends LinearLayout {
     public void setChooseId(String chooseId) {
         if (!TextUtils.isEmpty(chooseId)) {
             if (adapterOption != null) {
-                for (int i = 0; i < adapterOption.strs.size(); i++) {
-                    if (chooseId.equals(((OptionEntity) adapterOption.strs.get(i)).getIdentifiy())) {
+                for (int i = 0; i < adapterOption.objects.size(); i++) {
+                    if (chooseId.equals(((OptionEntity) adapterOption.objects.get(i)).getUniqueId())) {
                         wheelOption.setCurrentItem(i);
                         break;
                     }
@@ -103,22 +102,22 @@ public class OptionWheelLayout extends LinearLayout {
     }
 
     public void setWheelData(List<OptionEntity> list, String chooseId) {
-        indexOptionChooose = -1;
+        int indexOptionChoose = WheelView.IDLE_POSITION;
         adapterOption = new WheelDataAdapter();
-        adapterOption.strs.clear();
-        adapterOption.strs.addAll(list);
+        adapterOption.objects.clear();
+        adapterOption.objects.addAll(list);
         if (!TextUtils.isEmpty(chooseId)) {
             for (int i = 0; i < list.size(); i++) {
-                if (chooseId.equals(list.get(i).getIdentifiy())) {
-                    indexOptionChooose = i;
+                if (chooseId.equals(list.get(i).getUniqueId())) {
+                    indexOptionChoose = i;
                     break;
                 }
             }
         }
 
-        wheelOption.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelOption.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
+            public void onItemChecked(WheelView wv, int index) {
 
             }
 
@@ -130,44 +129,41 @@ public class OptionWheelLayout extends LinearLayout {
         });
         wheelOption.setAdapter(adapterOption);
 
-        if (indexOptionChooose > 0) {
-            wheelOption.setCurrentItem(indexOptionChooose);
+        if (indexOptionChoose > WheelView.IDLE_POSITION) {
+            wheelOption.setCurrentItem(indexOptionChoose);
         }
 
     }
 
-    public void setFormatter(OptionFormatter formatter) {
-        this.formatter = formatter;
-        wheelOption.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatOption((OptionEntity) item);
-            }
-        });
+    public void setFormatter(WheelFormatListener formatter) {
+        wheelOption.setFormatter(formatter);
     }
 
     public String getSelectId() {
-        if (wheelOption.getCurrentItem() > -1) {
-            return ((OptionEntity) adapterOption.strs.get(wheelOption.getCurrentItem())).getIdentifiy();
+        if (wheelOption.getCurrentItem() > WheelView.IDLE_POSITION
+                && adapterOption.objects.size() > 0) {
+            return ((OptionEntity) adapterOption.objects.get(wheelOption.getCurrentItem())).getUniqueId();
         } else {
             return "";
         }
     }
 
-    public String getSelectItemName() {
-        if (wheelOption.getCurrentItem() > -1) {
-            return ((OptionEntity) adapterOption.strs.get(wheelOption.getCurrentItem())).getWheelItem();
+    public String getSelectName() {
+        if (wheelOption.getCurrentItem() > WheelView.IDLE_POSITION
+                && adapterOption.objects.size() > 0) {
+            return ((OptionEntity) adapterOption.objects.get(wheelOption.getCurrentItem())).getWheelItem();
         } else {
             return "";
         }
+    }
+
+    public void setOnWheelScrollListener(OnWheelScrollListener onWheelScrollListener) {
+        this.onWheelScrollListener = onWheelScrollListener;
     }
 
     public WheelView getWheelOption() {
         return wheelOption;
     }
 
-    public TextView getTvOptionLabel() {
-        return tvOptionLabel;
-    }
 
 }

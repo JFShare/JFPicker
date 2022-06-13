@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
 import com.Jfpicker.wheelpicker.picker_option.entity.OptionEntity;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnOptionPickedListener;
 import com.Jfpicker.wheelpicker.picker_option.widget.OptionWheelLayout;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 import java.util.List;
 
@@ -30,17 +31,18 @@ public class OptionPicker extends ModalDialog {
         super(activity);
     }
 
-    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
-        super(activity, dialogConfig);
-    }
-
     public OptionPicker(@NonNull Activity activity, String title, List<OptionEntity> dataList) {
         super(activity);
         this.title = title;
         this.dataList = dataList;
     }
 
-    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig, String title, List<OptionEntity> dataList) {
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig) {
+        super(activity, dialogConfig);
+    }
+
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig,
+                        String title, List<OptionEntity> dataList) {
         super(activity, dialogConfig);
         this.title = title;
         this.dataList = dataList;
@@ -50,6 +52,23 @@ public class OptionPicker extends ModalDialog {
         super(activity, themeResId);
     }
 
+    public OptionPicker(@NonNull Activity activity, int themeResId,
+                        String title, List<OptionEntity> dataList) {
+        super(activity, themeResId);
+        this.title = title;
+        this.dataList = dataList;
+    }
+
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
+    public OptionPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId,
+                        String title, List<OptionEntity> dataList) {
+        super(activity, dialogConfig, themeResId);
+        this.title = title;
+        this.dataList = dataList;
+    }
 
     @NonNull
     @Override
@@ -61,7 +80,7 @@ public class OptionPicker extends ModalDialog {
     @Override
     protected void initView() {
         super.initView();
-        titleView.setText("请选择");
+        titleTextView.setText("请选择");
     }
 
     @Override
@@ -71,7 +90,7 @@ public class OptionPicker extends ModalDialog {
         if (dataList != null) {
             wheelLayout.setWheelData(dataList);
         }
-        titleView.setText(title);
+        titleTextView.setText(title);
     }
 
     @Override
@@ -80,10 +99,10 @@ public class OptionPicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
         if (onOptionPickedListener != null) {
             String id = wheelLayout.getSelectId();
-            String name = wheelLayout.getSelectItemName();
+            String name = wheelLayout.getSelectName();
             onOptionPickedListener.onOption(id, name);
         }
     }
@@ -100,7 +119,7 @@ public class OptionPicker extends ModalDialog {
     public void setTitle(String title) {
         this.title = title;
         if (initialized) {
-            titleView.setText(title);
+            titleTextView.setText(title);
         }
     }
 

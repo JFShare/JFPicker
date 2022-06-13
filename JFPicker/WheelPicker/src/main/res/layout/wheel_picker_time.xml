@@ -10,25 +10,20 @@
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewHour"
-        style="@style/defaultWheel"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        app:wheelGravity="center" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tvHourLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text=""
         android:visibility="visible" />
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewMinute"
-        style="@style/defaultWheel"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        app:wheelGravity="center" />
+        android:layout_height="wrap_content" />
 
 
     <TextView
@@ -36,21 +31,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text=""
         android:visibility="visible" />
 
     <com.Jfpicker.wheelpicker.wheelview.WheelView
         android:id="@+id/wheelViewSecond"
-        style="@style/defaultWheel"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        app:wheelGravity="center" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tvSecondLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text=""
         android:visibility="visible" />
 </LinearLayout>

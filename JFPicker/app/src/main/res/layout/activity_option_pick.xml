@@ -1,60 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".OptionPickActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="未使用滚轮的样式，自行设置"
-        android:textColor="#333333">
 
-    </TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".OptionPickActivity">
 
-    <Button
-        android:id="@+id/btnOption"
-        style="@style/commonButton"
-        android:text="选项选择器">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="滚轮选项弹窗"
+            android:textColor="#333333">
 
-    </Button>
+        </TextView>
 
-    <Button
-        android:id="@+id/btnTwoLinkageOption"
-        style="@style/commonButton"
-        android:text="二三级联动选择器">
+        <Button
+            android:id="@+id/btnOption"
+            style="@style/commonButton"
+            android:text="一级选项选择器">
 
-    </Button>
+        </Button>
 
-    <Button
-        android:id="@+id/btnList"
-        style="@style/commonButton"
-        android:text="列表选项选择器(数据量少)">
+        <Button
+            android:id="@+id/btnTwoLinkageOption"
+            style="@style/commonButton"
+            android:text="二三级联动选择器">
 
-    </Button>
+        </Button>
 
-    <Button
-        android:id="@+id/btnListManyData"
-        style="@style/commonButton"
-        android:text="列表选项选择器(数据量很多)">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="列表样式选项弹窗"
+            android:textColor="#333333">
 
-    </Button>
+        </TextView>
 
-    <Button
-        android:id="@+id/btnOptionListMyStyle"
-        style="@style/commonButton"
-        android:text="自定义列表项样式（包含一个id是 recyclerview_content_text 的TextView）">
+        <Button
+            android:id="@+id/btnList"
+            style="@style/commonButton"
+            android:text="列表选项选择器">
 
-    </Button>
+        </Button>
 
-    <Button
-        android:id="@+id/btnSure"
-        style="@style/commonButton"
-        android:text="确认取消弹窗">
+        <Button
+            android:id="@+id/btnListManyData"
+            style="@style/commonButton"
+            android:text="列表选项选择器(数据量很多时，固定高度)">
 
-    </Button>
-</LinearLayout>
+        </Button>
+
+        <Button
+            android:id="@+id/btnOptionListMyStyle"
+            style="@style/commonButton"
+            android:text="自定义列表项样式（包含一个id是tvRecyclerviewContent的TextView）">
+
+        </Button>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="单选弹窗"
+            android:textColor="#333333">
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnRadio"
+            style="@style/commonButton"
+            android:text="单选弹窗">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnRadioMyStyle"
+            style="@style/commonButton"
+            android:text="自定义列表样式（包含一个id是tvRecyclerviewContent的TextView,
+id是ivCheck的ImageView）">
+
+        </Button>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="多选弹窗"
+            android:textColor="#333333">
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnCheckBox"
+            style="@style/commonButton"
+            android:text="多选弹窗">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnCheckBoxMyStyle"
+            style="@style/commonButton"
+            android:text="自定义列表样式（包含一个id是tvRecyclerviewContent的TextView,
+id是ivCheck的ImageView）">
+
+        </Button>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="提示弹窗"
+            android:textColor="#333333">
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnSure"
+            style="@style/commonButton"
+            android:text="提示弹窗">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnInput"
+            style="@style/commonButton"
+            android:text="输入弹窗">
+
+        </Button>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

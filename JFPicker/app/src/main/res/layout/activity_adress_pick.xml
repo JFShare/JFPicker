@@ -5,123 +5,122 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AdressPickActivity">
+    tools:context=".AddressPickActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="地址选择器"
-        android:textColor="#333333">
+        android:orientation="vertical">
 
-    </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="地址选择器"
+            android:textColor="#333333">
 
-    <Button
-        android:id="@+id/btnAdressPicker"
-        style="@style/commonButton"
-        android:text="地址选择器(省市区)">
+        </TextView>
 
-    </Button>
+        <Button
+            android:id="@+id/btnAdressPicker"
+            style="@style/commonButton"
+            android:text="地址选择器(省市区)">
 
-    <Button
-        android:id="@+id/btnDefault"
-        style="@style/commonButton"
-        android:text="地址选择器(设置默认值)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnDefault"
+            style="@style/commonButton"
+            android:text="地址选择器(设置默认值)">
 
-    <Button
-        android:id="@+id/btnAdressPickerProvinceCity"
-        style="@style/commonButton"
-        android:text="地址选择器(省市)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnAdressPickerProvinceCity"
+            style="@style/commonButton"
+            android:text="地址选择器(省市)">
 
-    <Button
-        android:id="@+id/btnAdressPickerCityCounty"
-        style="@style/commonButton"
-        android:text="地址选择器(市区)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnAdressPickerCityCounty"
+            style="@style/commonButton"
+            android:text="地址选择器(市区)">
 
-    <Button
-        android:id="@+id/btnAdressPickerCustom"
-        style="@style/commonButton"
-        android:text="地址选择器(自定义数据格式之JSON，含港澳台区划)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnAdressPickerCustom"
+            style="@style/commonButton"
+            android:text="地址选择器(自定义数据格式之JSON，含港澳台区划)">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="地址选择器大部分使用了AndroidPicker的代码与数据源，\n源码地址：https://github.com/gzu-liyujiang/AndroidPicker">
+        </Button>
 
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="地址选择器大部分使用了AndroidPicker的代码与数据源，\n源码地址：https://github.com/gzu-liyujiang/AndroidPicker">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="ViewPager类型的地址选择器"
-        android:textColor="#333333">
+        </TextView>
 
-    </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="ViewPager地址选择器"
+            android:textColor="#333333">
 
-    <Button
-        android:id="@+id/btnViewpagerPicker"
-        style="@style/commonButton"
-        android:text="ViewPager类型的地址选择器">
+        </TextView>
 
-    </Button>
+        <Button
+            android:id="@+id/btnViewpagerPicker"
+            style="@style/commonButton"
+            android:text="ViewPager类型的地址选择器">
 
-    <Button
-        android:id="@+id/btnViewpagerPickerDefault"
-        style="@style/commonButton"
-        android:text="ViewPager类型的地址选择器(设置默认值)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnViewpagerPickerDefault"
+            style="@style/commonButton"
+            android:text="ViewPager类型的地址选择器(设置默认值)">
 
-    <Button
-        android:id="@+id/btnViewpagerPickerMyStyle"
-        style="@style/commonButton"
-        android:text="ViewPager类型的地址选择器(自定义列表样式)">
+        </Button>
 
-    </Button>
+        <Button
+            android:id="@+id/btnViewpagerPickerMyStyle"
+            style="@style/commonButton"
+            android:text="ViewPager类型的地址选择器(自定义列表样式)">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="(设置样式：列表每一项是 一个id为recyclerView_content_framelayout 的FrameLayout,里面是一个id为recyclerview_content_text的TextView,通过接口的方式将列表项组件和数据暴露给用户自行设置)"
-        android:textColor="#999999">
+        </Button>
 
-    </TextView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="网络请求选择器"
-        android:textColor="#333333">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="ViewPager五级网络请求选择器"
+            android:textColor="#333333">
 
-    </TextView>
+        </TextView>
 
-    <Button
-        android:id="@+id/btnNetRequestPicker"
-        style="@style/commonButton"
-        android:text="每一级进行网络请求选择器">
+        <Button
+            android:id="@+id/btnNetRequestPicker"
+            style="@style/commonButton"
+            android:text="五级网络请求选择器(根据上一级id请求下一级数据)">
 
-    </Button>
+        </Button>
 
-    <Button
-        android:id="@+id/btnNetRequestPickerMyStyle"
-        style="@style/commonButton"
-        android:text="每一级进行网络请求选择器(自定义列表样式，原理同上)">
+        <Button
+            android:id="@+id/btnNetRequestPickerMyStyle"
+            style="@style/commonButton"
+            android:text="五级网络请求选择器(自定义列表样式)">
 
-    </Button>
+        </Button>
+        <Button
+            android:id="@+id/btnNetRequestPickerMyState"
+            style="@style/commonButton"
+            android:text="五级网络请求选择器(自定义状态布局)">
+
+        </Button>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

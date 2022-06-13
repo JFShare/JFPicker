@@ -14,86 +14,35 @@ import androidx.recyclerview.widget.RecyclerView;
  * @description 继承自RecyclerView.ItemDecoration的抽象类，实现了3D滚轮的效果
  */
 abstract class WheelDecoration extends RecyclerView.ItemDecoration {
-    /**
-     * 垂直布局时的靠左,居中,靠右立体效果
-     */
-    static final int GRAVITY_LEFT = 1;
-    static final int GRAVITY_CENTER = 2;
-    static final int GRAVITY_RIGHT = 3;
-    /**
-     * 此参数影响左右旋转对齐时的效果,系数越大,越明显,自己体会......(0-1之间)
-     */
-    static final float DEF_SCALE = 0.75F;
+
     /**
      * 无效的位置
      */
     public static final int IDLE_POSITION = -1;
-    /**
-     * 显示的item数量
-     */
-    final int itemCount;
-    /**
-     * 每个item大小,  垂直布局时为item的高度, 水平布局时为item的宽度
-     */
-    final int itemSize;
-    /**
-     * 每个item平均下来后对应的旋转角度
-     * 根据中间分割线上下item和中间总数量计算每个item对应的旋转角度
-     */
-    final float itemDegree;
-    /**
-     * 滑动轴的半径
-     */
-    final float wheelRadio;
-    /**
-     * 对齐方式
-     */
-    final int gravity;
+
+
+    private WheelAttrs attrs;
+    float haltItemDegreeTotal;
+    float halfItemHeight;
+    float itemPreDegree;
+    float wheelRadio;
+
     /**
      * 3D旋转
      */
     Camera camera;
     Matrix matrix;
 
-    /**
-     * 判断是否为中间item
-     */
-    boolean hasCenterItem;
-    float halfItemHeight;
-    int centerItemPosition = IDLE_POSITION;
 
-    /**
-     * 左右倾斜的幅度
-     */
-    float gravityCoefficient;
-    /**
-     * 是否显示3D旋转效果
-     */
-    boolean isWheel;
-    /**
-     * 总体的弧度
-     */
-    float itemDegreeTotal;
-    float haltItemDegreeTotal;
-    /**
-     * 是否透明度渐变
-     */
-    boolean alphaGradient;
+    int centerRealPosition = IDLE_POSITION;
 
-    WheelDecoration(int itemCount, int itemSize, int gravity, float gravityCoefficient,
-                    boolean isWheel, float itemDegreeTotal, boolean alphaGradient) {
-        this.itemCount = itemCount;
-        this.itemSize = itemSize;
-        this.itemDegreeTotal = itemDegreeTotal;
-        this.haltItemDegreeTotal = itemDegreeTotal / 2;
-        this.halfItemHeight = itemSize / 2.0f;
-        this.itemDegree = itemDegreeTotal / (itemCount * 2 + 1);
-        this.gravity = gravity;
-        wheelRadio = (float) WheelUtils.radianToRadio(itemSize, itemDegree);
 
-        this.gravityCoefficient = gravityCoefficient;
-        this.isWheel = isWheel;
-        this.alphaGradient = alphaGradient;
+    WheelDecoration(WheelAttrs attrs) {
+        this.attrs = attrs;
+        this.haltItemDegreeTotal = attrs.getItemDegreeTotal() / 2;
+        this.halfItemHeight = attrs.getItemSize() / 2.0f;
+        this.itemPreDegree = attrs.getItemDegreeTotal() / (attrs.getHalfItemCount() * 2 + 1);
+        wheelRadio = (float) radianToRadio(attrs.getItemSize(), itemPreDegree);
 
         camera = new Camera();
         matrix = new Matrix();
@@ -102,201 +51,102 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public final void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        centerItemPosition = IDLE_POSITION;
+        centerRealPosition = IDLE_POSITION;
         if (!(parent.getLayoutManager() instanceof LinearLayoutManager)) return;
         LinearLayoutManager llm = (LinearLayoutManager) parent.getLayoutManager();
-        boolean isVertical = llm.getOrientation() == LinearLayoutManager.VERTICAL;
         Rect parentRect = new Rect(parent.getLeft(), parent.getTop(), parent.getRight(), parent.getBottom());
+        //绘制分割线背景
+        drawDividerBg(c, parentRect);
+        //计算中心item
         int startPosition = llm.findFirstVisibleItemPosition();
         if (startPosition < 0) return;
         int endPosition = llm.findLastVisibleItemPosition();
-        hasCenterItem = false;
+        centerRealPosition = IDLE_POSITION;
         for (int itemPosition = startPosition; itemPosition <= endPosition; itemPosition++) {
-            if (itemPosition < itemCount) continue;//itemCount为空白项,不考虑
-            if (itemPosition >= llm.getItemCount() - itemCount) break;//超过列表的也是空白项
+            //除去空白项
+            if (itemPosition < attrs.getHalfItemCount()) continue;
+            if (itemPosition >= llm.getItemCount() - attrs.getHalfItemCount()) break;
+            //列表项组件
             View itemView = llm.findViewByPosition(itemPosition);
             Rect itemRect = new Rect(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            if (isVertical) {
-                //垂直布局
-                drawVerticalItem(c, itemRect, itemPosition, translateX(parentRect), parentRect.exactCenterY());
-            } else {
-                //水平布局
-                drawHorizontalItem(c, itemRect, itemPosition, parentRect.exactCenterX(), parentRect.exactCenterY());
+            float itemCenterY = itemRect.exactCenterY();
+            // scrollOffY : 每一列表项的中心点 和 RecyclerView 中心点的 实际偏移距离
+            float scrollOffY = itemCenterY - parentRect.exactCenterY();
+            //数据中的实际位置
+            int realPosition = itemPosition - attrs.getHalfItemCount();
+            //计算中心item, 优先最靠近中心区域的为中心点
+            if (Math.abs(scrollOffY) <= halfItemHeight) {
+                centerRealPosition = realPosition;
+                break;
             }
         }
-        drawDivider(c, parentRect, isVertical);
+
+        for (int itemPosition = startPosition; itemPosition <= endPosition; itemPosition++) {
+            //除去空白项
+            if (itemPosition < attrs.getHalfItemCount()) continue;
+            if (itemPosition >= llm.getItemCount() - attrs.getHalfItemCount()) break;
+            View itemView = llm.findViewByPosition(itemPosition);
+            Rect itemRect = new Rect(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getBottom());
+            //绘制滚轮项
+            drawWheel(c, itemRect, itemPosition, parentRect.exactCenterX(), parentRect.exactCenterY());
+        }
+        //绘制分割线
+        drawDivider(c, parentRect);
     }
 
     /**
-     * 根据对齐方式,计算出垂直布局时X轴移动的位置
-     *
-     * @return
+     * 绘制滚轮效果
      */
-    private float translateX(Rect parentRect) {
-        float parentCenterX = parentRect.exactCenterX();
-        if (!isWheel) {
-            return parentCenterX;
-        }
-        switch (gravity) {
-            case GRAVITY_LEFT:
-                return parentCenterX * (1 + gravityCoefficient);
-            case GRAVITY_RIGHT:
-                return parentCenterX * (1 - gravityCoefficient);
-        }
-        return parentCenterX;
-    }
-
-    /**
-     * 画垂直布局时的item
-     *
-     * @param c
-     * @param rect
-     * @param position
-     * @param translateX    X轴旋转时的平移点
-     * @param parentCenterY RecyclerView的中心Y点
-     */
-    void drawVerticalItem(Canvas c, Rect rect, int position, float translateX, float parentCenterY) {
-        int realPosition = position - itemCount;//数据中的实际位置
+    void drawWheel(Canvas c, Rect rect, int itemPosition, float parentCenterX, float parentCenterY) {
+        //数据中的实际位置
+        int realPosition = itemPosition - attrs.getHalfItemCount();
         float itemCenterY = rect.exactCenterY();
         float scrollOffY = itemCenterY - parentCenterY;
-
-        float rotateDegreeX = scrollOffY * itemDegree / itemSize;//垂直布局时要以X轴为中心旋转
-
-        int alpha = degreeAlpha(rotateDegreeX);
-        float textSizeP = degreeP(rotateDegreeX);
-        if (alpha <= 0) return;
-        float rotateSinX = (float) Math.sin(Math.toRadians(rotateDegreeX));
-        float rotateOffY = scrollOffY - wheelRadio * rotateSinX;//因旋转导致界面视角的偏移
-
-        //计算中心item, 优先最靠近中心区域的为中心点
-        boolean isCenterItem = false;
-        if (!hasCenterItem) {
-            isCenterItem = Math.abs(scrollOffY) <= halfItemHeight;
-            if (isCenterItem) {
-                centerItemPosition = realPosition;
-                hasCenterItem = true;
-            }
-        }
-
+        float rotateDegreeX = scrollOffY * itemPreDegree / attrs.getItemSize();
         c.save();
-        if (isWheel) {
-            c.translate(0.0f, -rotateOffY);//因旋转导致界面视角的偏移
+        if (attrs.isWheel()) {
+            float rotateSinX = (float) Math.sin(Math.toRadians(rotateDegreeX));
+            float rotateOffY = scrollOffY - wheelRadio * rotateSinX;
+            //平移画布，使靠外的项贴近中间项，不至于因为滚轮的圆弧效果间距过大，实现因旋转导致界面视角的偏移，为了更好的滚轮显示效果
+            if (attrs.isTranslateYZ()) {
+                c.translate(0.0f, -rotateOffY);
+            }
             camera.save();
-
-            //旋转时离视角的z轴方向也会变化,先移动Z轴再旋转
-            float z = (float) (wheelRadio * (1 - Math.abs(Math.cos(Math.toRadians(rotateDegreeX)))));
-            camera.translate(0, 0, z);
-
-
+            //平移z轴，为了更好的滚轮显示效果
+            if (attrs.isTranslateYZ()) {
+                float z = (float) (wheelRadio * (1 - Math.abs(Math.cos(Math.toRadians(rotateDegreeX)))));
+                camera.translate(0, 0, z);
+            }
+            //旋转x轴实现圆弧效果。如果不旋转x轴，就没有圆弧效果，只是平铺而已
             camera.rotateX(-rotateDegreeX);
             camera.getMatrix(matrix);
             camera.restore();
-            matrix.preTranslate(-translateX, -itemCenterY);
-            matrix.postTranslate(translateX, itemCenterY);
+            matrix.preTranslate(-parentCenterX, -itemCenterY);
+            matrix.postTranslate(parentCenterX, itemCenterY);
             c.concat(matrix);
         }
 
-        drawItem(c, rect, realPosition, alpha, isCenterItem, true, textSizeP);
+        drawItem(c, rect, realPosition, centerRealPosition);
         c.restore();
     }
 
-    /**
-     * 画水平布局时的item
-     *
-     * @param c
-     * @param rect
-     * @param position
-     * @param parentCenterX RecyclerView的中心X点
-     * @param parentCenterY RecyclerView的中心Y点
-     */
-    void drawHorizontalItem(Canvas c, Rect rect, int position, float parentCenterX, float parentCenterY) {
-        int realPosition = position - itemCount;
-        float itemCenterX = rect.exactCenterX();
-        float scrollOffX = itemCenterX - parentCenterX;
-        float rotateDegreeY = scrollOffX * itemDegree / itemSize;//垂直布局时要以Y轴为中心旋转
-        int alpha = degreeAlpha(rotateDegreeY);
-        float textSizeP = degreeP(rotateDegreeY);
-        if (alpha <= 0) return;
-        float rotateSinY = (float) Math.sin(Math.toRadians(rotateDegreeY));
-        float rotateOffX = scrollOffX - wheelRadio * rotateSinY;//因旋转导致界面视角的偏移
-
-        boolean isCenterItem = false;
-        if (!hasCenterItem) {
-            isCenterItem = Math.abs(scrollOffX) <= halfItemHeight;
-            if (isCenterItem) {
-                centerItemPosition = realPosition;
-                hasCenterItem = true;
-            }
-        }
-
-        c.save();
-        if (isWheel) {
-            c.translate(-rotateOffX, 0.0f);
-            camera.save();
-
-            float z = (float) (wheelRadio * (1 - Math.abs(Math.cos(Math.toRadians(rotateDegreeY)))));
-            camera.translate(0, 0, z);
-
-            camera.rotateY(rotateDegreeY);
-            camera.getMatrix(matrix);
-            camera.restore();
-            matrix.preTranslate(-itemCenterX, -parentCenterY);
-            matrix.postTranslate(itemCenterX, parentCenterY);
-            c.concat(matrix);
-        }
-
-        drawItem(c, rect, realPosition, alpha, isCenterItem, false, textSizeP);
-        c.restore();
-    }
-
-    /**
-     * 旋转大于一半的总度数，完全透明
-     *
-     * @param degree
-     * @return
-     */
-    int degreeAlpha(float degree) {
-        if (!alphaGradient) {
-            return 255;
-        }
-        degree = Math.abs(degree);
-        if (degree >= haltItemDegreeTotal) return 0;
-        float al = (haltItemDegreeTotal - degree) / haltItemDegreeTotal;
-        return (int) (255 * al);
-    }
-
-    float degreeP(float degree) {
-        degree = Math.abs(degree);
-        if (degree >= haltItemDegreeTotal) return 0;
-        float p = (haltItemDegreeTotal - degree) / haltItemDegreeTotal;
-        if (p > 1) {
-            return 1;
-        }
-        if (p < 0) {
-            return 0;
-        }
-        return p;
-    }
 
     /**
      * 画item,  如何画法可以在此方法中实现
-     *
-     * @param c
-     * @param rect         item的区域
-     * @param position     item index
-     * @param alpha        已经计算好的item所在位置的透明度,也可以不考虑设置此参数
-     * @param isCenterItem 是否为中心点
-     * @param isVertical   是否为垂直布局, false 为水平布局
-     * @param textSizeP    文字缩放的尺寸
      */
-    abstract void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical, float textSizeP);
+    abstract void drawItem(Canvas c, Rect rect, int itemRealPosition, int centerRealPosition);
+
+    /**
+     * 画分割线背景 如何画法可以在此方法中实现
+     */
+    abstract void drawDividerBg(Canvas c, Rect rect);
 
     /**
      * 画分割线 如何画法可以在此方法中实现
-     *
-     * @param c
-     * @param rect       整个内容区域
-     * @param isVertical
      */
-    abstract void drawDivider(Canvas c, Rect rect, boolean isVertical);
+    abstract void drawDivider(Canvas c, Rect rect);
+
+    static double radianToRadio(int radian, float degree) {
+        return radian * 180d / (degree * Math.PI);
+    }
 }

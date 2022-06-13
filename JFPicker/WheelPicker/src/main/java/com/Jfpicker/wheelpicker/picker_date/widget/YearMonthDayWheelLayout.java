@@ -5,18 +5,18 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.Jfpicker.wheelpicker.utils.DateUtils;
+import com.Jfpicker.wheelpicker.picker_date.formatter.FillZeroFormatter;
+import com.Jfpicker.wheelpicker.utils.WheelDateUtils;
 import com.Jfpicker.wheelpicker.R;
-import com.Jfpicker.wheelpicker.picker_base.WheelDataAdapter;
-import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
+import com.Jfpicker.wheelpicker.wheelview.WheelDataAdapter;
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 import com.Jfpicker.wheelpicker.picker_date.annotation.DateMode;
-import com.Jfpicker.wheelpicker.picker_date.formatter.DateFormatter;
-import com.Jfpicker.wheelpicker.picker_date.formatter.DateFillZeroFormatter;
+
 import com.Jfpicker.wheelpicker.wheelview.WheelAttrs;
 import com.Jfpicker.wheelpicker.wheelview.WheelView;
+import com.Jfpicker.wheelpicker.wheelview.listener.OnWheelScrollListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +29,8 @@ import java.util.Locale;
  */
 
 public class YearMonthDayWheelLayout extends LinearLayout {
-
+    public static final int default_start_year = 1900;
+    public static final int default_idle_date = -1;
     private WheelView wheelViewYear;
     private WheelView wheelViewMonth;
     private WheelView wheelViewDay;
@@ -38,54 +39,46 @@ public class YearMonthDayWheelLayout extends LinearLayout {
     private TextView tvMonthLabel;
     private TextView tvDayLabel;
 
-
     private WheelDataAdapter adapterYear;
     private WheelDataAdapter adapterMonth;
     private WheelDataAdapter adapterDay;
 
-    private int indexYearChooose, indexMonthChoose, indexDayChoose;
-
-    public static final int default_start_year = 1900;
-
-    private int wheelStartYear;
-    private int wheelEndYear;
-
-    private int wheelDefaultYear;
-    private int wheelDefaultMonth;
-    private int wheelDefaultDay;
+    private int indexYearChoose, indexMonthChoose, indexDayChoose;
 
     private int dateMode = DateMode.YEAR_MONTH_DAY;
     private boolean hasInitView = false;
 
-    private DateFormatter formatter = new DateFillZeroFormatter();
+    private OnWheelScrollListener onWheelScrollListenerYear;
+    private OnWheelScrollListener onWheelScrollListenerMonth;
+    private OnWheelScrollListener onWheelScrollListenerDay;
 
     public YearMonthDayWheelLayout(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public YearMonthDayWheelLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public YearMonthDayWheelLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context);
     }
 
     public YearMonthDayWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context) {
         setOrientation(VERTICAL);
         inflate(context, R.layout.wheel_picker_date, this);
-        onInit(context);
+        onInit();
     }
 
-    private void onInit(@NonNull Context context) {
+    private void onInit() {
 
         wheelViewYear = findViewById(R.id.wheelViewYear);
         wheelViewMonth = findViewById(R.id.wheelViewMonth);
@@ -102,7 +95,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         setDateMode(dateMode);
-        initWheelView(default_start_year, DateUtils.getFutureYear(100),
+        initWheelView(default_start_year, WheelDateUtils.getFutureYear(100),
                 currentYear, currentMonth, currentDay);
 
     }
@@ -125,63 +118,66 @@ public class YearMonthDayWheelLayout extends LinearLayout {
     public void initWheelView(int startYear, int endYear,
                               int currentYear, int currentMonth,
                               int currentDay) {
-
-
-        wheelStartYear = startYear;
-        wheelEndYear = endYear;
-
-        wheelDefaultYear = currentYear;
-        wheelDefaultMonth = currentMonth;
-        wheelDefaultDay = currentDay;
-
-        setFormatter(formatter);
+        setFormatter(new FillZeroFormatter());
 
         //初始化年滚轮
         adapterYear = new WheelDataAdapter();
-        adapterYear.strs.clear();
-        for (int i = wheelStartYear; i <= wheelEndYear; i++) {
-            adapterYear.strs.add(i);
-            if (i == wheelDefaultYear) {
-                indexYearChooose = i - wheelStartYear;
+        adapterYear.objects.clear();
+        for (int i = startYear; i <= endYear; i++) {
+            adapterYear.objects.add(i);
+            if (i == currentYear) {
+                indexYearChoose = i - startYear;
             }
         }
-        wheelViewYear.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewYear.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
-                indexYearChooose = index;
+            public void onItemChecked(WheelView wv, int index) {
+                indexYearChoose = index;
                 reloadDayData();
+                if (onWheelScrollListenerYear != null) {
+                    onWheelScrollListenerYear.onItemChecked(wv, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
                 wheelViewMonth.setEnabled(!scrolling);
                 wheelViewDay.setEnabled(!scrolling);
+                if (onWheelScrollListenerYear != null) {
+                    onWheelScrollListenerYear.onScrollStatusChange(scrolling);
+                }
             }
 
         });
         wheelViewYear.setAdapter(adapterYear);
-        wheelViewYear.setCurrentItem(indexYearChooose);
+        wheelViewYear.setCurrentItem(indexYearChoose);
 
         //初始化月滚轮
         adapterMonth = new WheelDataAdapter();
-        adapterMonth.strs.clear();
+        adapterMonth.objects.clear();
         for (int i = 1; i <= 12; i++) {
-            adapterMonth.strs.add(i);
-            if (i == wheelDefaultMonth) {
+            adapterMonth.objects.add(i);
+            if (i == currentMonth) {
                 indexMonthChoose = i - 1;
             }
         }
-        wheelViewMonth.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewMonth.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
+            public void onItemChecked(WheelView wv, int index) {
                 indexMonthChoose = index;
                 reloadDayData();
+                if (onWheelScrollListenerMonth != null) {
+                    onWheelScrollListenerMonth.onItemChecked(wv, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
                 wheelViewYear.setEnabled(!scrolling);
                 wheelViewDay.setEnabled(!scrolling);
+                if (onWheelScrollListenerMonth != null) {
+                    onWheelScrollListenerMonth.onScrollStatusChange(scrolling);
+                }
             }
         });
         wheelViewMonth.setAdapter(adapterMonth);
@@ -189,26 +185,31 @@ public class YearMonthDayWheelLayout extends LinearLayout {
 
         //初始化日滚轮
         adapterDay = new WheelDataAdapter();
-        adapterDay.strs.clear();
-        int CurrentDays = DateUtils.calculateDaysInMonth(currentYear, currentMonth);
+        adapterDay.objects.clear();
+        int CurrentDays = WheelDateUtils.calculateDaysInMonth(currentYear, currentMonth);
         for (int i = 1; i <= CurrentDays; i++) {
-            adapterDay.strs.add(i);
-            if (i == wheelDefaultDay) {
+            adapterDay.objects.add(i);
+            if (i == currentDay) {
                 indexDayChoose = i - 1;
             }
         }
-        wheelViewDay.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewDay.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
+            public void onItemChecked(WheelView wv, int index) {
                 indexDayChoose = index;
+                if (onWheelScrollListenerDay != null) {
+                    onWheelScrollListenerDay.onItemChecked(wv, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
                 wheelViewYear.setEnabled(!scrolling);
                 wheelViewMonth.setEnabled(!scrolling);
+                if (onWheelScrollListenerDay != null) {
+                    onWheelScrollListenerDay.onScrollStatusChange(scrolling);
+                }
             }
-
         });
         wheelViewDay.setAdapter(adapterDay);
         wheelViewDay.setCurrentItem(indexDayChoose);
@@ -217,26 +218,17 @@ public class YearMonthDayWheelLayout extends LinearLayout {
     }
 
     //设置显示格式化
-    public void setFormatter(DateFormatter formatter) {
-        this.formatter = formatter;
-        wheelViewYear.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatYear((int) item);
-            }
-        });
-        wheelViewMonth.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatMonth((int) item);
-            }
-        });
-        wheelViewDay.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatDay((int) item);
-            }
-        });
+    public void setFormatter(WheelFormatListener formatter) {
+        wheelViewYear.setFormatter(formatter);
+        wheelViewMonth.setFormatter(formatter);
+        wheelViewDay.setFormatter(formatter);
+    }
+
+    public void setFormatter(WheelFormatListener formatterYear, WheelFormatListener formatterMonth,
+                             WheelFormatListener formatterDay) {
+        wheelViewYear.setFormatter(formatterYear);
+        wheelViewMonth.setFormatter(formatterMonth);
+        wheelViewDay.setFormatter(formatterDay);
     }
 
     //设置显示模式
@@ -280,8 +272,8 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         if (dateMode == DateMode.MONTH_DAY) {
             //需要根据年份及月份动态计算天数，这里因为是月日显示模式，2月是29天
             List<Integer> dayList = new ArrayList<>();
-            int maxDays = DateUtils.getMaxDaysInMonth(
-                    (Integer) adapterMonth.strs.get(wheelViewMonth.getCurrentItem()));
+            int maxDays = WheelDateUtils.getMaxDaysInMonth(
+                    (Integer) adapterMonth.objects.get(wheelViewMonth.getCurrentItem()));
             for (int i = 1; i <= maxDays; i++) {
                 dayList.add(i);
             }
@@ -289,15 +281,15 @@ public class YearMonthDayWheelLayout extends LinearLayout {
                 //年或月变动时，保持之前选择的日不动：如果之前选择的日是之前年月的最大日，则日自动为该年月的最大日
                 indexDayChoose = maxDays - 1;
             }
-            adapterDay.strs.clear();
-            adapterDay.strs.addAll(dayList);
+            adapterDay.objects.clear();
+            adapterDay.objects.addAll(dayList);
             adapterDay.notifyDataSetChanged();
             wheelViewDay.setCurrentItem(indexDayChoose);
         } else if (dateMode == DateMode.YEAR_MONTH_DAY) {
             //需要根据年份及月份动态计算天数
             List<Integer> dayList = new ArrayList<>();
-            int maxDays = DateUtils.calculateDaysInMonth((Integer) adapterYear.strs.get(wheelViewYear.getCurrentItem()),
-                    (Integer) adapterMonth.strs.get(wheelViewMonth.getCurrentItem()));
+            int maxDays = WheelDateUtils.calculateDaysInMonth((Integer) adapterYear.objects.get(wheelViewYear.getCurrentItem()),
+                    (Integer) adapterMonth.objects.get(wheelViewMonth.getCurrentItem()));
             for (int i = 1; i <= maxDays; i++) {
                 dayList.add(i);
             }
@@ -305,17 +297,17 @@ public class YearMonthDayWheelLayout extends LinearLayout {
                 //年或月变动时，保持之前选择的日不动：如果之前选择的日是之前年月的最大日，则日自动为该年月的最大日
                 indexDayChoose = maxDays - 1;
             }
-            adapterDay.strs.clear();
-            adapterDay.strs.addAll(dayList);
+            adapterDay.objects.clear();
+            adapterDay.objects.addAll(dayList);
             adapterDay.notifyDataSetChanged();
             wheelViewDay.setCurrentItem(indexDayChoose);
         }
     }
 
     public void setAllWheelViewAttrs(WheelAttrs attrs) {
-        wheelViewYear.setWheelAttrs(attrs);
-        wheelViewMonth.setWheelAttrs(attrs);
-        wheelViewDay.setWheelAttrs(attrs);
+        wheelViewYear.setAttrs(attrs);
+        wheelViewMonth.setAttrs(attrs);
+        wheelViewDay.setAttrs(attrs);
     }
 
     public WheelView getWheelViewYear() {
@@ -323,10 +315,13 @@ public class YearMonthDayWheelLayout extends LinearLayout {
     }
 
     public int getSelectYear() {
+        if (adapterYear.objects.size() == 0) {
+            return default_idle_date;
+        }
         if (dateMode == DateMode.YEAR_MONTH_DAY || dateMode == DateMode.YEAR_MONTH) {
-            return (Integer) adapterYear.strs.get(wheelViewYear.getCurrentItem());
+            return (Integer) adapterYear.objects.get(wheelViewYear.getCurrentItem());
         } else {
-            return -1;
+            return default_idle_date;
         }
     }
 
@@ -335,10 +330,13 @@ public class YearMonthDayWheelLayout extends LinearLayout {
     }
 
     public int getSelectMonth() {
+        if (adapterMonth.objects.size() == 0) {
+            return default_idle_date;
+        }
         if (dateMode == DateMode.NONE) {
-            return -1;
+            return default_idle_date;
         } else {
-            return (Integer) adapterMonth.strs.get(wheelViewMonth.getCurrentItem());
+            return (Integer) adapterMonth.objects.get(wheelViewMonth.getCurrentItem());
         }
 
     }
@@ -350,10 +348,13 @@ public class YearMonthDayWheelLayout extends LinearLayout {
 
 
     public int getSelectDay() {
+        if (adapterDay.objects.size() == 0) {
+            return default_idle_date;
+        }
         if (dateMode == DateMode.YEAR_MONTH_DAY || dateMode == DateMode.MONTH_DAY) {
-            return (Integer) adapterDay.strs.get(wheelViewDay.getCurrentItem());
+            return (Integer) adapterDay.objects.get(wheelViewDay.getCurrentItem());
         } else {
-            return -1;
+            return default_idle_date;
         }
     }
 
@@ -399,4 +400,16 @@ public class YearMonthDayWheelLayout extends LinearLayout {
         return tvDayLabel;
     }
 
+    public void setOnWheelScrollListener(OnWheelScrollListener listener) {
+        onWheelScrollListenerYear = listener;
+        onWheelScrollListenerMonth = listener;
+        onWheelScrollListenerDay = listener;
+    }
+
+    public void setOnWheelScrollListener(OnWheelScrollListener onWheelScrollListenerYear, OnWheelScrollListener onWheelScrollListenerMonth,
+                                         OnWheelScrollListener onWheelScrollListenerDay) {
+        this.onWheelScrollListenerYear = onWheelScrollListenerYear;
+        this.onWheelScrollListenerMonth = onWheelScrollListenerMonth;
+        this.onWheelScrollListenerDay = onWheelScrollListenerDay;
+    }
 }

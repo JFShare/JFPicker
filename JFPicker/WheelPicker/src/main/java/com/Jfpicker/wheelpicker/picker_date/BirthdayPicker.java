@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
-import com.Jfpicker.wheelpicker.picker_date.formatter.DateTextFormatter;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
+import com.Jfpicker.wheelpicker.picker_date.formatter.FillZeroAppendTextFormatter;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
 
 /**
  * @author Created by JF on  2021/11/12
@@ -27,10 +28,16 @@ public class BirthdayPicker extends YearMonthDayPicker {
         super(activity, themeResId);
     }
 
+    public BirthdayPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
     @Override
     protected void initView() {
         super.initView();
-        getWheelLayout().setFormatter(new DateTextFormatter());
+        getWheelLayout().getWheelViewYear().setFormatter(new FillZeroAppendTextFormatter("年"));
+        getWheelLayout().getWheelViewMonth().setFormatter(new FillZeroAppendTextFormatter("月"));
+        getWheelLayout().getWheelViewDay().setFormatter(new FillZeroAppendTextFormatter("日"));
         getWheelLayout().setLabelVisibility(View.GONE);
     }
 }

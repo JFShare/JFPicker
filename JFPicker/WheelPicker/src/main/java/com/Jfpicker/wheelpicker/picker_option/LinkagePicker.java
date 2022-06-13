@@ -9,8 +9,8 @@ import androidx.annotation.StyleRes;
 import com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnLinkagePickedListener;
 import com.Jfpicker.wheelpicker.picker_option.widget.LinkageWheelLayout;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 /**
  * 三级联动的选择弹窗
@@ -34,6 +34,10 @@ public class LinkagePicker extends ModalDialog {
         super(activity, themeResId);
     }
 
+    public LinkagePicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
     @NonNull
     @Override
     protected View createBodyView() {
@@ -44,7 +48,7 @@ public class LinkagePicker extends ModalDialog {
     @Override
     protected void initView() {
         super.initView();
-        titleView.setText("请选择");
+        titleTextView.setText("请选择");
     }
 
     @Override
@@ -53,7 +57,7 @@ public class LinkagePicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
         if (onLinkagePickedListener != null) {
             Object first = wheelLayout.getSelectFirst();
             Object second = wheelLayout.getSelectSecond();

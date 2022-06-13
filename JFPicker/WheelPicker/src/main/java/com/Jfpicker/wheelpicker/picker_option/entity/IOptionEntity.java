@@ -10,5 +10,5 @@ public interface IOptionEntity {
      String getWheelItem();
 
 
-     String getIdentifiy();
+     String getUniqueId();
 }

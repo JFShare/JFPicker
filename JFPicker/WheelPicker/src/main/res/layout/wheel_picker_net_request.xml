@@ -5,22 +5,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout"
+        android:id="@+id/tabLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="#0000FF"
+        app:tabIndicatorColor="@color/colorPrimary"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"
         app:tabPaddingEnd="10dp"
         app:tabPaddingStart="10dp"
         app:tabRippleColor="@null"
-        app:tabSelectedTextColor="#0000FF"
-        app:tabTextColor="#333333" />
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="@color/jf_text_color" />
 
 
     <androidx.viewpager2.widget.ViewPager2
@@ -28,38 +27,60 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tablayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
 
-    <LinearLayout
-        android:id="@+id/llLoading"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:id="@+id/flStateContent"
         android:visibility="gone"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/viewpager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/viewpager">
 
-        <ProgressBar
-            android:id="@+id/pbLoading"
-            style="@android:style/Widget.Material.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateTint="#0000FF" />
+        <LinearLayout
+            android:id="@+id/llError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
 
-        <TextView
-            android:id="@+id/tvLoading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="数据请求中..."
-            android:textColor="#666666">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="出错啦,点我重新加载..."
+                android:textColor="@color/jf_text_color">
 
-        </TextView>
-    </LinearLayout>
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/pbLoading"
+                style="@android:style/Widget.Material.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/tvLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="数据请求中..."
+                android:textColor="@color/jf_text_color">
+
+            </TextView>
+        </LinearLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,34 +3,36 @@ package com.Jfpicker.wheelpicker.picker_option;
 import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Jfpicker.wheelpicker.R;
+import com.Jfpicker.wheelpicker.picker_option.adapter.OptionAdapter;
 import com.Jfpicker.wheelpicker.picker_option.entity.OptionEntity;
 import com.Jfpicker.wheelpicker.picker_option.listener.OnOptionPickedListener;
-import com.Jfpicker.wheelpicker.utils.DensityUtils;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.chad.library.adapter.base.viewholder.BaseViewHolder;
+import com.Jfpicker.wheelpicker.rv_listener.OnRecyclerviewStyleListener;
+import com.Jfpicker.wheelpicker.utils.WheelDensityUtils;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 import java.util.List;
 
 /**
  * @author Created by JF on  2021/11/15
- * @description 单选RecyclerView列表样式的弹窗，可以传入列表项布局，要求有一个id是recyclerview_content_text的TextView
+ * @description 列表样式的选项弹窗，列表项包含一个id是tvRecyclerviewContent的TextView
+ * 可以设置布局id实现自定义样式
+ * 也可以通过设置OnRecyclerviewStyleListener实现自定义样式
  */
 
 public class OptionRecyclerViewPicker extends ModalDialog {
 
     private RecyclerView recyclerView;
-    private TextView tvCancel;
+
     private OnOptionPickedListener onOptionPickedListener;
 
     public OptionRecyclerViewPicker(@NonNull Activity activity) {
@@ -45,6 +47,16 @@ public class OptionRecyclerViewPicker extends ModalDialog {
         super(activity, themeResId);
     }
 
+    public OptionRecyclerViewPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
+    @Nullable
+    @Override
+    public View createTitleView() {
+        return null;
+    }
+
     @Nullable
     @Override
     protected View createTopLineView() {
@@ -54,22 +66,15 @@ public class OptionRecyclerViewPicker extends ModalDialog {
     @NonNull
     @Override
     protected View createBodyView() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_option_recyclerview, null, false);
+        View view = getLayoutInflater().inflate(R.layout.picker_recyclerview, null, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        tvCancel = view.findViewById(R.id.tvCancel);
-        tvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
         return view;
     }
 
+    @Nullable
     @Override
-    protected void initView() {
-        super.initView();
-        headerView.setVisibility(View.GONE);
+    protected View createFooterView() {
+        return getLayoutInflater().inflate(R.layout.footer_bottom_cancel, null, false);
     }
 
     @Override
@@ -78,64 +83,54 @@ public class OptionRecyclerViewPicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
 
     }
 
     public void setOptionsData(List<OptionEntity> list) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        OptionAdapter mAdapter = new OptionAdapter(list);
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                if (onOptionPickedListener != null) {
-                    onOptionPickedListener.onOption(mAdapter.getData().get(position).getId(),
-                            mAdapter.getData().get(position).getName());
-                    dismiss();
-                }
+        OptionAdapter mAdapter = new OptionAdapter(getContext(), list);
+        mAdapter.setOnItemClickListener((view, position) -> {
+            if (onOptionPickedListener != null) {
+                onOptionPickedListener.onOption(mAdapter.getDataList().get(position).getId(),
+                        mAdapter.getDataList().get(position).getName());
             }
+            dismiss();
+        });
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    public void setOptionsData(List<OptionEntity> list,
+                               OnRecyclerviewStyleListener onRecyclerviewStyleListener) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        OptionAdapter mAdapter = new OptionAdapter(getContext(), list, onRecyclerviewStyleListener);
+        mAdapter.setOnItemClickListener((view, position) -> {
+            if (onOptionPickedListener != null) {
+                onOptionPickedListener.onOption(mAdapter.getDataList().get(position).getId(),
+                        mAdapter.getDataList().get(position).getName());
+            }
+            dismiss();
         });
         recyclerView.setAdapter(mAdapter);
     }
 
     public void setOptionsData(int layoutResId, List<OptionEntity> list) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        OptionAdapter mAdapter = new OptionAdapter(layoutResId, list);
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                if (onOptionPickedListener != null) {
-                    onOptionPickedListener.onOption(mAdapter.getData().get(position).getId(),
-                            mAdapter.getData().get(position).getName());
-                    dismiss();
-                }
+        OptionAdapter mAdapter = new OptionAdapter(getContext(), layoutResId, list);
+        mAdapter.setOnItemClickListener((view, position) -> {
+            if (onOptionPickedListener != null) {
+                onOptionPickedListener.onOption(mAdapter.getDataList().get(position).getId(),
+                        mAdapter.getDataList().get(position).getName());
             }
+            dismiss();
         });
+
         recyclerView.setAdapter(mAdapter);
     }
 
-    public class OptionAdapter extends BaseQuickAdapter<OptionEntity, BaseViewHolder> {
-
-        public OptionAdapter(int layoutResId, @Nullable List<OptionEntity> data) {
-            super((layoutResId > 0) ? layoutResId : R.layout.item_content, data);
-        }
-
-        public OptionAdapter(@Nullable List<OptionEntity> data) {
-            super(R.layout.item_content, data);
-        }
-
-        @Override
-        protected void convert(@NonNull BaseViewHolder holder, OptionEntity entity) {
-            View view = holder.findView(R.id.recyclerview_content_text);
-            if (view instanceof TextView) {
-                holder.setText(R.id.recyclerview_content_text, entity.getName());
-            }
-        }
-    }
-
-    public void setRecyclerViewFixedHeight(int dpHeight) {
+    public void setRecyclerViewFixedHeight(@Dimension(unit = Dimension.DP) int dpHeight) {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
-        params.height = DensityUtils.dip2px(getContext(), dpHeight);
+        params.height = WheelDensityUtils.dip2px(getContext(), dpHeight);
         recyclerView.setLayoutParams(params);
     }
 
@@ -149,9 +144,6 @@ public class OptionRecyclerViewPicker extends ModalDialog {
         return recyclerView;
     }
 
-    public TextView getTvCancel() {
-        return tvCancel;
-    }
 
     public void setOnOptionPickedListener(OnOptionPickedListener onOptionPickedListener) {
         this.onOptionPickedListener = onOptionPickedListener;

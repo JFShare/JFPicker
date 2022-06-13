@@ -8,44 +8,83 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/btnWheelView"
+        style="@style/commonButton"
+        android:text="WheelView效果演示">
+
+    </Button>
 
     <Button
         android:id="@+id/btnDate"
         style="@style/commonButton"
-        android:text="时间选择器"></Button>
+        android:text="时间选择器">
+
+    </Button>
 
     <Button
         android:id="@+id/btnCalendar"
         style="@style/commonButton"
-        android:text="日历选择器"></Button>
+        android:text="日历选择器">
+
+    </Button>
 
     <Button
         android:id="@+id/btnOption"
         style="@style/commonButton"
-        android:text="选项选择器"></Button>
+        android:text="选项选择器">
+
+    </Button>
 
     <Button
         android:id="@+id/btnAdress"
         style="@style/commonButton"
-        android:text="地址选择器"></Button>
+        android:text="地址选择器">
 
-    <Button
-        android:id="@+id/btnUpdateAllStyle"
-        style="@style/commonButton"
-        android:text="设置全部弹窗样式（除了自设置）"></Button>
+    </Button>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:lineSpacingExtra="3dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:text="所有弹窗WheelView 默认样式：\n
-        defaultWheel 默认的滚轮样式\n
-        defaultNoWheel 默认的非滚轮样式\n
-在自己项目的styles资源文件夹中 覆盖这两个样式，可以给所有弹窗的WheelView设置默认样式。\n
-当然单独设置的样式会覆盖默认样式">
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_vertical">
 
-    </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全局弹窗样式："
+            android:textColor="@color/jf_text_color"
+            android:textSize="16sp">
+
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/rgDialogStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbDialogStyleDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="默认">
+
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/rbDialogStyleCustom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="自定义样式">
+
+            </RadioButton>
+
+
+        </RadioGroup>
+    </LinearLayout>
+
 </LinearLayout>

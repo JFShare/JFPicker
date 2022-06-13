@@ -8,8 +8,8 @@ import androidx.annotation.StyleRes;
 
 import com.Jfpicker.wheelpicker.picker_date.listener.OnTimePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 /**
  * @author Created by JF on  2021/11/12
@@ -33,6 +33,10 @@ public class HourMinuteSecondPicker extends ModalDialog {
         super(activity, themeResId);
     }
 
+    public HourMinuteSecondPicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
+    }
+
     @NonNull
     @Override
     protected View createBodyView() {
@@ -43,7 +47,7 @@ public class HourMinuteSecondPicker extends ModalDialog {
     @Override
     protected void initView() {
         super.initView();
-        titleView.setText("时间选择");
+        titleTextView.setText("时间选择");
     }
 
     @Override
@@ -52,7 +56,7 @@ public class HourMinuteSecondPicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
         if (onTimePickedListener != null) {
             int hour = wheelLayout.getSelectHour();
             int minute = wheelLayout.getSelectMinute();

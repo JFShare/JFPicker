@@ -5,18 +5,19 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.Jfpicker.wheelpicker.R;
-import com.Jfpicker.wheelpicker.picker_base.WheelDataAdapter;
-import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
+import com.Jfpicker.wheelpicker.picker_date.formatter.FillZeroFormatter;
+import com.Jfpicker.wheelpicker.wheelview.WheelDataAdapter;
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 import com.Jfpicker.wheelpicker.picker_date.annotation.TimeMode;
 
-import com.Jfpicker.wheelpicker.picker_date.formatter.TimeFillZeroFormatter;
-import com.Jfpicker.wheelpicker.picker_date.formatter.TimeFormatter;
+
 import com.Jfpicker.wheelpicker.wheelview.WheelAttrs;
 import com.Jfpicker.wheelpicker.wheelview.WheelView;
+import com.Jfpicker.wheelpicker.wheelview.listener.OnWheelScrollListener;
+
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -42,63 +43,40 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
     private WheelDataAdapter adapterMinute;
     private WheelDataAdapter adapterSecond;
 
-    private int indexHourChoose, indexMinuteChoose, indexSecondChoose;
-
     private int timeMode = TimeMode.HOUR_24;
+    public static final int default_idle_time = 0;
 
-    private TimeFormatter formatter = new TimeFillZeroFormatter();
-
-    //设置显示格式化
-    public void setFormatter(TimeFormatter formatter) {
-        this.formatter = formatter;
-        wheelViewHour.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatHour((int) item);
-            }
-        });
-        wheelViewMinute.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatMinute((int) item);
-            }
-        });
-        wheelViewSecond.setFormatter(new WheelFormatter() {
-            @Override
-            public String formatItem(@NonNull Object item) {
-                return formatter.formatSecond((int) item);
-            }
-        });
-    }
-
+    private OnWheelScrollListener onWheelScrollListenerHour;
+    private OnWheelScrollListener onWheelScrollListenerMinute;
+    private OnWheelScrollListener onWheelScrollListenerSecond;
 
     public HourMinuteSecondWheelLayout(Context context) {
         super(context);
-        init(context, null);
+        init(context);
     }
 
     public HourMinuteSecondWheelLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public HourMinuteSecondWheelLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(context);
     }
 
     public HourMinuteSecondWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(Context context) {
         setOrientation(VERTICAL);
         inflate(context, R.layout.wheel_picker_time, this);
-        onInit(context);
+        onInit();
     }
 
-    private void onInit(@NonNull Context context) {
+    private void onInit() {
 
         wheelViewHour = findViewById(R.id.wheelViewHour);
         wheelViewMinute = findViewById(R.id.wheelViewMinute);
@@ -112,11 +90,11 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMiute = calendar.get(Calendar.MINUTE);
+        int currentMinute = calendar.get(Calendar.MINUTE);
         int currentSecond = calendar.get(Calendar.SECOND);
         setTimeMode(timeMode);
-        setFormatter(formatter);
-        initWheelView(currentHour, currentMiute, currentSecond);
+        setFormatter(new FillZeroFormatter());
+        initWheelView(currentHour, currentMinute, currentSecond);
 
     }
 
@@ -124,81 +102,105 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
         //初始化时滚轮
         adapterHour = new WheelDataAdapter();
-        adapterHour.strs.clear();
+        adapterHour.objects.clear();
+        int indexHourChoose = 0;
         for (int i = 0; i <= 23; i++) {
-            adapterHour.strs.add(i);
+            adapterHour.objects.add(i);
             if (i == currentHour) {
                 indexHourChoose = i;
             }
         }
-        wheelViewHour.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewHour.setAdapter(adapterHour);
+        wheelViewHour.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
-                indexHourChoose = index;
+            public void onItemChecked(WheelView wheelView, int index) {
+                if (onWheelScrollListenerHour != null) {
+                    onWheelScrollListenerHour.onItemChecked(wheelView, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-//                wheelViewMinute.setEnabled(!scrolling);
-//                wheelViewSecond.setEnabled(!scrolling);
+                if (onWheelScrollListenerHour != null) {
+                    onWheelScrollListenerHour.onScrollStatusChange(scrolling);
+                }
             }
-
         });
-        wheelViewHour.setAdapter(adapterHour);
         wheelViewHour.setCurrentItem(indexHourChoose);
 
         //初始化分滚轮
         adapterMinute = new WheelDataAdapter();
-        adapterMinute.strs.clear();
+        adapterMinute.objects.clear();
+        int indexMinuteChoose = 0;
         for (int i = 0; i <= 59; i++) {
-            adapterMinute.strs.add(i);
+            adapterMinute.objects.add(i);
             if (i == currentMiute) {
                 indexMinuteChoose = i;
             }
         }
 
-        wheelViewMinute.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewMinute.setAdapter(adapterMinute);
+        wheelViewMinute.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
-                indexMinuteChoose = index;
+            public void onItemChecked(WheelView wheelView, int index) {
+                if (onWheelScrollListenerMinute != null) {
+                    onWheelScrollListenerMinute.onItemChecked(wheelView, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-//                wheelViewHour.setEnabled(!scrolling);
-//                wheelViewSecond.setEnabled(!scrolling);
+                if (onWheelScrollListenerMinute != null) {
+                    onWheelScrollListenerMinute.onScrollStatusChange(scrolling);
+                }
             }
         });
-        wheelViewMinute.setAdapter(adapterMinute);
         wheelViewMinute.setCurrentItem(indexMinuteChoose);
 
         //初始化秒滚轮
         adapterSecond = new WheelDataAdapter();
-        adapterSecond.strs.clear();
-
-        for (int i = 1; i <= 59; i++) {
-            adapterSecond.strs.add(i);
+        adapterSecond.objects.clear();
+        int indexSecondChoose = 0;
+        for (int i = 0; i <= 59; i++) {
+            adapterSecond.objects.add(i);
             if (i == currentSecond) {
                 indexSecondChoose = i;
             }
         }
-        wheelViewSecond.setOnItemSelectedListener(new WheelView.OnItemSelectedListener() {
+        wheelViewSecond.setAdapter(adapterSecond);
+        wheelViewSecond.setOnWheelScrollListener(new OnWheelScrollListener() {
             @Override
-            public void onItemSelected(WheelView wv, int index) {
-                indexSecondChoose = index;
+            public void onItemChecked(WheelView wheelView, int index) {
+                if (onWheelScrollListenerSecond != null) {
+                    onWheelScrollListenerSecond.onItemChecked(wheelView, index);
+                }
             }
 
             @Override
             public void onScrollStatusChange(boolean scrolling) {
-                wheelViewHour.setEnabled(!scrolling);
-                wheelViewMinute.setEnabled(!scrolling);
+                if (onWheelScrollListenerSecond != null) {
+                    onWheelScrollListenerSecond.onScrollStatusChange(scrolling);
+                }
             }
-
         });
-        wheelViewSecond.setAdapter(adapterSecond);
         wheelViewSecond.setCurrentItem(indexSecondChoose);
 
 
+    }
+
+    //设置显示格式化
+    public void setFormatter(WheelFormatListener formatter) {
+        wheelViewHour.setFormatter(formatter);
+        wheelViewMinute.setFormatter(formatter);
+        wheelViewSecond.setFormatter(formatter);
+    }
+
+    //设置显示格式化
+    public void setFormatter(WheelFormatListener formatterHour, WheelFormatListener formatterMinute,
+                             WheelFormatListener formatterSecond) {
+        wheelViewHour.setFormatter(formatterHour);
+        wheelViewMinute.setFormatter(formatterMinute);
+        wheelViewSecond.setFormatter(formatterSecond);
     }
 
     //设置显示模式
@@ -239,10 +241,13 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
     }
 
     public int getSelectHour() {
+        if (adapterHour.objects.size() == 0) {
+            return default_idle_time;
+        }
         if (timeMode == TimeMode.HOUR_24 || timeMode == TimeMode.HOUR_24_NO_SECOND) {
-            return (int) adapterHour.strs.get(wheelViewHour.getCurrentItem());
+            return (int) adapterHour.objects.get(wheelViewHour.getCurrentItem());
         } else {
-            return -1;
+            return default_idle_time;
         }
     }
 
@@ -252,11 +257,14 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
     }
 
     public int getSelectMinute() {
+        if (adapterMinute.objects.size() == 0) {
+            return default_idle_time;
+        }
         if (timeMode == TimeMode.HOUR_24 || timeMode == TimeMode.HOUR_24_NO_SECOND
                 || timeMode == TimeMode.HOUR_24_NO_HOUR) {
-            return (int) adapterMinute.strs.get(wheelViewMinute.getCurrentItem());
+            return (int) adapterMinute.objects.get(wheelViewMinute.getCurrentItem());
         } else {
-            return -1;
+            return default_idle_time;
         }
 
     }
@@ -266,17 +274,20 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
     }
 
     public int getSelectSecond() {
+        if (adapterSecond.objects.size() == 0) {
+            return default_idle_time;
+        }
         if (timeMode == TimeMode.HOUR_24 || timeMode == TimeMode.HOUR_24_NO_HOUR) {
-            return (int) adapterSecond.strs.get(wheelViewSecond.getCurrentItem());
+            return (int) adapterSecond.objects.get(wheelViewSecond.getCurrentItem());
         } else {
-            return -1;
+            return default_idle_time;
         }
     }
 
     public void setAllWheelViewAttrs(WheelAttrs attrs) {
-        wheelViewHour.setWheelAttrs(attrs);
-        wheelViewMinute.setWheelAttrs(attrs);
-        wheelViewSecond.setWheelAttrs(attrs);
+        wheelViewHour.setAttrs(attrs);
+        wheelViewMinute.setAttrs(attrs);
+        wheelViewSecond.setAttrs(attrs);
     }
 
 
@@ -322,5 +333,16 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
         return tvSecondLabel;
     }
 
+    public void setOnWheelScrollListener(OnWheelScrollListener listener) {
+        onWheelScrollListenerHour = listener;
+        onWheelScrollListenerMinute = listener;
+        onWheelScrollListenerSecond = listener;
+    }
 
+    public void setOnWheelScrollListener(OnWheelScrollListener onWheelScrollListenerHour, OnWheelScrollListener onWheelScrollListenerMinute,
+                                         OnWheelScrollListener onWheelScrollListenerSecond) {
+        this.onWheelScrollListenerHour = onWheelScrollListenerHour;
+        this.onWheelScrollListenerMinute = onWheelScrollListenerMinute;
+        this.onWheelScrollListenerSecond = onWheelScrollListenerSecond;
+    }
 }

@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DialogCollect">
         <activity
+            android:name=".WheelViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".CalendarPickActivity"
             android:exported="true" />
         <activity
-            android:name=".AdressPickActivity"
+            android:name=".AddressPickActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity

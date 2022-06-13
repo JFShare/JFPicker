@@ -12,30 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:text="在布局中使用"
-            android:textColor="#333333">
-
-        </TextView>
-
-        <com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout
-            android:id="@+id/datelayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout>
-
-        <Button
-            android:id="@+id/btnChangeStyle"
-            style="@style/commonButton"
-            android:text="动态改变布局的样式">
-
-        </Button>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,10 +21,35 @@
 
         </TextView>
 
+        <com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout
+            android:id="@+id/wheelViewYearMonthDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout>
+
+        <TextView
+            android:id="@+id/tvYearMonthDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/jf_text_color"
+            android:textSize="16sp">
+
+        </TextView>
+
         <Button
             android:id="@+id/btnYearMonthDay"
             style="@style/commonButton"
             android:text="年月日选择器（默认样式）">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnCustomYearMonthDay"
+            style="@style/commonButton"
+            android:text="年月日选择器（自定义样式）">
 
         </Button>
 
@@ -83,12 +84,6 @@
             </Button>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnCustomYearMonthDay"
-            style="@style/commonButton"
-            android:text="非滚轮年月日选择器（自定义样式）">
-
-        </Button>
 
         <Button
             android:id="@+id/btnBirthday"
@@ -100,7 +95,7 @@
         <Button
             android:id="@+id/btnYearMonthDayCustom"
             style="@style/commonButton"
-            android:text="在Android轮子哥的开源项目中看到的一款非常可爱的选择器，大致模仿下样式(使用自定义滚轮属性实现)">
+            android:text="整体自定义样式">
 
         </Button>
 
@@ -113,10 +108,35 @@
 
         </TextView>
 
+        <com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout
+            android:id="@+id/wheelViewHourMinuteSecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout>
+
+        <TextView
+            android:id="@+id/tvHourMinuteSecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/jf_text_color"
+            android:textSize="16sp">
+
+        </TextView>
+
         <Button
             android:id="@+id/btnHourMinuteSecond"
             style="@style/commonButton"
             android:text="时分秒选择器（默认样式）">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btnCustomHourMinuteSecond"
+            style="@style/commonButton"
+            android:text="时分秒选择器（自定义样式）">
 
         </Button>
 
@@ -151,12 +171,6 @@
             </Button>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnCustomHourMinuteSecond"
-            style="@style/commonButton"
-            android:text="非滚轮时分秒选择器（自定义样式）">
-
-        </Button>
 
         <TextView
             android:layout_width="wrap_content"

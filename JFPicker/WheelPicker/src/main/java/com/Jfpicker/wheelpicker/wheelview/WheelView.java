@@ -1,19 +1,21 @@
 package com.Jfpicker.wheelpicker.wheelview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Jfpicker.wheelpicker.utils.DensityUtils;
 import com.Jfpicker.wheelpicker.R;
-import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
+import com.Jfpicker.wheelpicker.wheelview.listener.OnWheelScrollListener;
 
 /**
  * @author Created by JF on  2021/11/10
@@ -25,120 +27,22 @@ public class WheelView extends FrameLayout {
      * 无效的位置
      */
     public static final int IDLE_POSITION = -1;
-    /**
-     * 垂直与水平布局两种状态
-     */
-    public static final int WHEEL_VERTICAL = 1;
-    public static final int WHEEL_HORIZONTAL = 2;
 
-
-    /**
-     * item color
-     */
-    private int textColor = Color.BLACK;
-    /**
-     * 中心item颜色
-     */
-    private int textColorCenter = Color.parseColor("#333333");
-    /**
-     * 分割线颜色
-     */
-    private int dividerColor = Color.BLACK;
-    /**
-     * 文本大小
-     */
-    private float textSize;
-    /**
-     * item数量
-     */
-    private int itemCount = 3;
-    /**
-     * item大小
-     */
-    private int itemSize;
-    /**
-     * 分割线之间距离
-     */
-    private int dividerSize;
-    /**
-     * 布局方向
-     */
-    private int orientation = WHEEL_VERTICAL;
-    /**
-     * 对齐方式
-     */
-    private int gravity = WheelDecoration.GRAVITY_CENTER;
-    /**
-     * 文字对齐方式
-     */
-    private int gravity_text = WheelDecoration.GRAVITY_CENTER;
-
-    /**
-     * 左右倾斜的幅度
-     */
-    private float gravityCoefficient = 0.75F;
-
-    /**
-     * 是否仿Ios样式的滚轮
-     */
-    private boolean isWheel = true;
-
-    /**
-     * 3D滚轮效果的总角度
-     */
-    private float itemDegreeTotal = 180.f;
-
-    /**
-     * 文字渐变
-     */
-    private boolean alphaGradient = true;
-
-    /**
-     * 文字是否加粗
-     */
-    private boolean isTextBlod = false;
-
-    /**
-     * 选中文字是否加粗
-     */
-    private boolean isCenterTextBlod = false;
-
-    /**
-     * 文字大小是否渐变
-     */
-    private boolean textSizeGradient = false;
-
-    /**
-     * 文字大小渐变 的最小文字尺寸
-     */
-    private float minGradientTextSize;
+    private WheelAttrs wheelAttrs = WheelAttrs.getDefault();
 
     /**
      * recyclerView
      */
     private CScrollRecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
-
-    private SimpleWheelDecoration wheelDecoration;
-    private WheelViewAdapter wheelAdapter;
-
-    private WheelDataAbstractAdapter mDataAdapter;
+    private SimpleWheelDecoration wheelDecoration; //RecyclerView.ItemDecoration
+    private WheelViewAdapter wheelAdapter; // RecyclerView.Adapter
+    private WheelDataAbstractAdapter abstractAdapter;
     private WheelViewObserver observer;
 
-
     private int mState = RecyclerView.SCROLL_STATE_IDLE;
-
     private int dataPosition = IDLE_POSITION;
-
-    private WheelFormatter formatter;
-
-    public void setFormatter(WheelFormatter formatter) {
-        this.formatter = formatter;
-        if (wheelDecoration != null) {
-            wheelDecoration.setFormatter(formatter);
-        }
-    }
-
+    private OnWheelScrollListener listener;
 
     public WheelView(Context context) {
         super(context);
@@ -159,24 +63,35 @@ public class WheelView extends FrameLayout {
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WheelView);
-            itemCount = a.getInt(R.styleable.WheelView_wheelItemCount, itemCount);
-            textColor = a.getColor(R.styleable.WheelView_wheelTextColor, textColor);
-            textColorCenter = a.getColor(R.styleable.WheelView_wheelTextColorCenter, textColorCenter);
-            dividerColor = a.getColor(R.styleable.WheelView_wheelDividerColor, dividerColor);
-            textSize = a.getDimension(R.styleable.WheelView_wheelTextSize, DensityUtils.sp2px(context, 18));
-            itemSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelItemSize, DensityUtils.dip2px(context, 35));
-            dividerSize = a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerSize, DensityUtils.dip2px(context, 35));
-            orientation = a.getInt(R.styleable.WheelView_wheelOrientation, orientation);
-            gravity = a.getInt(R.styleable.WheelView_wheelGravity, gravity);
-            gravity_text = a.getInt(R.styleable.WheelView_wheelTextGravity, gravity);
-            gravityCoefficient = a.getFloat(R.styleable.WheelView_gravityCoefficient, gravityCoefficient);
-            isWheel = a.getBoolean(R.styleable.WheelView_isWheel, true);
-            itemDegreeTotal = a.getFloat(R.styleable.WheelView_itemDegreeTotal, itemDegreeTotal);
-            alphaGradient = a.getBoolean(R.styleable.WheelView_alphaGradient, alphaGradient);
-            isTextBlod = a.getBoolean(R.styleable.WheelView_isTextBlod, isTextBlod);
-            isCenterTextBlod = a.getBoolean(R.styleable.WheelView_isCenterTextBlod, isCenterTextBlod);
-            textSizeGradient = a.getBoolean(R.styleable.WheelView_textSizeGradient, textSizeGradient);
-            minGradientTextSize = a.getDimension(R.styleable.WheelView_minGradientTextSize, DensityUtils.sp2px(context, 10));
+            wheelAttrs.setWheel(a.getBoolean(R.styleable.WheelView_isWheel, true));
+            wheelAttrs.setTranslateYZ(a.getBoolean(R.styleable.WheelView_translateYZ, true));
+            wheelAttrs.setItemDegreeTotal(a.getFloat(R.styleable.WheelView_itemDegreeTotal, 180.f));
+            wheelAttrs.setHalfItemCount(a.getInt(R.styleable.WheelView_halfItemCount, 3));
+            wheelAttrs.setItemSize(a.getDimensionPixelOffset(R.styleable.WheelView_wheelItemSize,
+                    WheelAttrs.DEFAULT_SIZE));
+
+
+            wheelAttrs.setTextColor(a.getColor(R.styleable.WheelView_wheelTextColor,
+                    WheelAttrs.DEFAULT_TEXT_COLOR));
+            wheelAttrs.setCheckedTextColor(a.getColor(R.styleable.WheelView_wheelCheckedTextColor,
+                    WheelAttrs.DEFAULT_TEXT_COLOR));
+            wheelAttrs.setTextSize(a.getDimension(R.styleable.WheelView_wheelTextSize,
+                    WheelAttrs.DEFAULT_TEXT_SIZE));
+            wheelAttrs.setCheckedTextSize(a.getDimension(R.styleable.WheelView_wheelCheckedTextSize,
+                    WheelAttrs.DEFAULT_TEXT_SIZE));
+            wheelAttrs.setTextBold(a.getBoolean(R.styleable.WheelView_isTextBold, false));
+            wheelAttrs.setCheckedTextBold(a.getBoolean(R.styleable.WheelView_isCheckedTextBold, false));
+
+
+            wheelAttrs.setDividerType(a.getInt(R.styleable.WheelView_wheelDividerType, WheelAttrs.DIVIDER_LINE));
+            wheelAttrs.setDividerSize(a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerSize,
+                    WheelAttrs.DEFAULT_SIZE));
+            wheelAttrs.setDividerBgColor(a.getColor(R.styleable.WheelView_wheelDividerBgColor,
+                    WheelAttrs.DEFAULT_DIVIDER_BG_COLOR));
+            wheelAttrs.setDividerColor(a.getColor(R.styleable.WheelView_wheelDividerColor,
+                    WheelAttrs.DEFAULT_DIVIDER_COLOR));
+            wheelAttrs.setDividerStrokeWidth(a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerStrokeWidth, 1));
+            wheelAttrs.setDividerCorner(a.getDimensionPixelOffset(R.styleable.WheelView_wheelDividerCorner, 0));
             a.recycle();
         }
         initRecyclerView(context);
@@ -186,64 +101,55 @@ public class WheelView extends FrameLayout {
         removeAllViews();
         mRecyclerView = new CScrollRecyclerView(context);
         mRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
-        int totolItemSize = (itemCount * 2 + 1) * itemSize;
+        int totalItemSize = (wheelAttrs.getHalfItemCount() * 2 + 1) * wheelAttrs.getItemSize();
         layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(orientation == WHEEL_VERTICAL ?
-                LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         //让滑动结束时都能定到中心位置
         new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
-        this.addView(mRecyclerView, WheelUtils.createLayoutParams(orientation, totolItemSize));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                totalItemSize);
+        this.addView(mRecyclerView, params);
 
-        wheelAdapter = new WheelViewAdapter(orientation, itemSize, itemCount);
-        wheelDecoration = new SimpleWheelDecoration(wheelAdapter, formatter, gravity, gravityCoefficient, isWheel,
-                gravity_text, textColor, textColorCenter, textSize, dividerColor, dividerSize, itemDegreeTotal,
-                alphaGradient, isTextBlod, isCenterTextBlod, textSizeGradient, minGradientTextSize);
+        wheelAdapter = new WheelViewAdapter(wheelAttrs);
+        wheelDecoration = new SimpleWheelDecoration(wheelAdapter, wheelAttrs);
         mRecyclerView.addItemDecoration(wheelDecoration);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 mState = newState;
-                if (listener == null || wheelDecoration == null) return;
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
-                    listener.onScrollStatusChange(true);
-                } else {
-                    listener.onScrollStatusChange(false);
-                }
-                if (wheelDecoration.centerItemPosition == IDLE_POSITION || newState != RecyclerView.SCROLL_STATE_IDLE)
-                    return;
-
+                if (wheelDecoration == null) return;
                 dataPosition = getCurrentItem();
-                listener.onItemSelected(WheelView.this, dataPosition);
-
+                if (listener == null) return;
+                listener.onScrollStatusChange(newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING);
+                if (wheelDecoration.centerRealPosition == IDLE_POSITION || newState != RecyclerView.SCROLL_STATE_IDLE)
+                    return;
+                listener.onItemChecked(WheelView.this, dataPosition);
             }
         });
         mRecyclerView.setAdapter(wheelAdapter);
     }
 
     public void setAdapter(WheelDataAbstractAdapter adapter) {
-        if (mDataAdapter != null) {
-            mDataAdapter.setWheelViewObserver(null);
+        if (abstractAdapter != null) {
+            abstractAdapter.setWheelViewObserver(null);
         }
-        mDataAdapter = adapter;
-        if (mDataAdapter != null) {
+        abstractAdapter = adapter;
+        if (abstractAdapter != null) {
             if (observer == null) {
                 observer = new WheelViewObserver();
             }
-            mDataAdapter.setWheelViewObserver(observer);
+            abstractAdapter.setWheelViewObserver(observer);
             dataPosition = IDLE_POSITION;
-            this.wheelAdapter.adapter = adapter;
-            this.wheelAdapter.notifyDataSetChanged();
+            wheelAdapter.adapter = adapter;
+            dataSetChanged();
         }
     }
 
-    public WheelDataAbstractAdapter getAdapter() {
-        return mDataAdapter;
-    }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void dataSetChanged() {
-        this.wheelAdapter.notifyDataSetChanged();
+        wheelAdapter.notifyDataSetChanged();
     }
 
     public void setCurrentItem(int position) {
@@ -253,30 +159,68 @@ public class WheelView extends FrameLayout {
 
     public int getCurrentItem() {
         int adapterCount = layoutManager.getItemCount();
-        if (wheelDecoration.centerItemPosition >= adapterCount)
-            return 0; //如果当前位置大于整个适配器大小,刷新时RecyclerView会回到第0个位置
-        int wheelCount = adapterCount - itemCount * 2;
-        if (wheelDecoration.centerItemPosition >= wheelCount) {
+        if (wheelDecoration.centerRealPosition >= adapterCount)
+            return 0;
+        int wheelCount = adapterCount - wheelAttrs.getHalfItemCount() * 2;
+        if (wheelDecoration.centerRealPosition >= wheelCount) {
             return wheelCount - 1;
         }
-        return wheelDecoration.centerItemPosition;
+        return wheelDecoration.centerRealPosition;
     }
 
-    private OnItemSelectedListener listener;
 
+    //获取当前的滚轮样式
+    public WheelAttrs getAttrs() {
+        return wheelAttrs;
+    }
 
-    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+    public void updateAttrs() {
+        setAttrs(wheelAttrs);
+    }
+
+    //动态 重新设置滚轮样式
+    public void setAttrs(WheelAttrs attrs) {
+        if (mState != RecyclerView.SCROLL_STATE_IDLE) {
+            return;
+        }
+        if (attrs != null) {
+            if (mRecyclerView != null && layoutManager != null
+                    && wheelAdapter != null && wheelDecoration != null) {
+                wheelAttrs = attrs;
+                initRecyclerView(getContext());
+                if (abstractAdapter != null) {
+                    wheelAdapter.adapter = abstractAdapter;
+                    dataSetChanged();
+                    if (abstractAdapter.getItemCount() <= 0) {
+                        return;
+                    }
+                    if (dataPosition > IDLE_POSITION && dataPosition < abstractAdapter.getItemCount()) {
+                        setCurrentItem(dataPosition);
+                    }
+                }
+            }
+        }
+    }
+
+    public void setOnWheelScrollListener(OnWheelScrollListener listener) {
         this.listener = listener;
     }
 
-
-    public interface OnItemSelectedListener {
-        void onItemSelected(WheelView wheelView, int index);
-
-        void onScrollStatusChange(boolean scrolling);
-
+    public void setFormatter(WheelFormatListener formatter) {
+        if (wheelAttrs != null) {
+            wheelAttrs.setFormatter(formatter);
+            updateAttrs();
+        }
     }
 
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (mRecyclerView != null) {
+            mRecyclerView.setCanScroll(enabled);
+        }
+    }
 
     private class WheelViewObserver extends DataSetObserver {
         @Override
@@ -290,103 +234,5 @@ public class WheelView extends FrameLayout {
         }
     }
 
-
-    public static abstract class WheelDataAbstractAdapter {
-
-        private DataSetObserver wheelObserver;
-
-        void setWheelViewObserver(DataSetObserver observer) {
-            synchronized (this) {
-                wheelObserver = observer;
-            }
-        }
-
-        protected abstract int getItemCount();
-
-        protected abstract Object getItem(int index);
-
-        public final void notifyDataSetChanged() {
-            synchronized (this) {
-                if (wheelObserver != null) {
-                    wheelObserver.onChanged();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (mRecyclerView != null) {
-            mRecyclerView.setCanScroll(enabled);
-        }
-    }
-
-    //动态 重新设置滚轮样式
-    public void setWheelAttrs(WheelAttrs attrs) {
-
-        if (mState != RecyclerView.SCROLL_STATE_IDLE) {
-            return;
-        }
-        if (attrs != null) {
-
-            if (mRecyclerView != null && layoutManager != null
-                    && wheelAdapter != null && wheelDecoration != null) {
-
-                itemCount = attrs.getItemCount();
-                textColor = attrs.getTextColor();
-                textColorCenter = attrs.getTextColorCenter();
-                dividerColor = attrs.getDividerColor();
-                textSize = DensityUtils.sp2px(getContext(), attrs.getTextSize());
-                itemSize = DensityUtils.dip2px(getContext(), attrs.getItemSize());
-                dividerSize = DensityUtils.dip2px(getContext(), attrs.getDividerSize());
-                gravity = attrs.getWheelGravity();
-                gravity_text = attrs.getTextGravity();
-                gravityCoefficient = attrs.getGravityCoefficient();
-                isWheel = attrs.isWheel();
-                itemDegreeTotal = attrs.getItemDegreeTotal();
-                alphaGradient = attrs.isAlphaGradient();
-                isTextBlod = attrs.isTextBlod();
-                isCenterTextBlod = attrs.isCenterTextBlod();
-                textSizeGradient = attrs.isTextSizeGradient();
-                minGradientTextSize = DensityUtils.sp2px(getContext(), attrs.getMinGradientTextSize());
-
-                initRecyclerView(getContext());
-                if (mDataAdapter != null) {
-                    this.wheelAdapter.adapter = mDataAdapter;
-                    this.wheelAdapter.notifyDataSetChanged();
-                    if (mDataAdapter.getItemCount() <= 0) {
-                        return;
-                    }
-                    if (dataPosition > IDLE_POSITION && dataPosition < mDataAdapter.getItemCount()) {
-                        setCurrentItem(dataPosition);
-                    }
-                }
-            }
-
-        }
-    }
-
-    //获取当前的滚轮样式
-    public WheelAttrs.Builder getAttrsBuilder() {
-        WheelAttrs.Builder builder = new WheelAttrs.Builder();
-        return builder.setItemCount(itemCount)
-                .setTextColor(textColor)
-                .setTextColorCenter(textColorCenter)
-                .setDividerColor(dividerColor)
-                .setTextSize(DensityUtils.px2sp(getContext(), textSize))
-                .setItemSize(DensityUtils.px2dip(getContext(), itemSize))
-                .setDividerSize(DensityUtils.px2dip(getContext(), dividerSize))
-                .setWheelGravity(gravity)
-                .setTextGravity(gravity_text)
-                .setGravityCoefficient(gravityCoefficient)
-                .setIsWheel(isWheel)
-                .setItemDegreeTotal(itemDegreeTotal)
-                .setAlphaGradient(alphaGradient)
-                .setTextBlod(isTextBlod)
-                .setCenterTextBlod(isCenterTextBlod)
-                .setTextSizeGradient(textSizeGradient)
-                .setMinGradientTextSize(DensityUtils.px2sp(getContext(), minGradientTextSize));
-    }
 
 }

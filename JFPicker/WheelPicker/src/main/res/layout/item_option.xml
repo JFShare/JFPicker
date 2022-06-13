@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@id/tvRecyclerviewContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ripper_wave_bg"
+        android:gravity="start|center_vertical"
+        android:paddingStart="15dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="15dp"
+        android:textColor="@color/jf_text_color"
+        android:textSize="14sp">
+
+    </TextView>
+
+    <View
+        android:id="@+id/viewSplitLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/jf_split_line_Color">
+
+    </View>
+</LinearLayout>

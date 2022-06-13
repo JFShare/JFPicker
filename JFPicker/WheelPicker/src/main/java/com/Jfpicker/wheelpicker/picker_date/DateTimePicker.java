@@ -7,12 +7,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 
-import com.Jfpicker.wheelpicker.utils.DensityUtils;
+import com.Jfpicker.wheelpicker.utils.WheelDensityUtils;
 import com.Jfpicker.wheelpicker.picker_date.listener.OnDateTimePickedListener;
 import com.Jfpicker.wheelpicker.picker_date.widget.HourMinuteSecondWheelLayout;
 import com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout;
-import com.Jfpicker.wheelpicker.wheel_dialog.DialogConfig;
-import com.Jfpicker.wheelpicker.wheel_dialog.ModalDialog;
+import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
+import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 
 /**
  * @author Created by JF on  2021/11/12
@@ -37,6 +37,10 @@ public class DateTimePicker extends ModalDialog {
 
     public DateTimePicker(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
+    }
+
+    public DateTimePicker(@NonNull Activity activity, DialogConfig dialogConfig, @StyleRes int themeResId) {
+        super(activity, dialogConfig, themeResId);
     }
 
     @NonNull
@@ -66,8 +70,8 @@ public class DateTimePicker extends ModalDialog {
         dateLayout.getWheelViewDay().setLayoutParams(paramsDay);
 
         LinearLayout.LayoutParams paramsDate = new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1.3F);
-        paramsDate.rightMargin = DensityUtils.dip2px(activity, 5);
-        paramsDate.leftMargin = DensityUtils.dip2px(activity, 5);
+        paramsDate.rightMargin = WheelDensityUtils.dip2px(activity, 5);
+        paramsDate.leftMargin = WheelDensityUtils.dip2px(activity, 5);
         dateTimeLayout.addView(dateLayout, paramsDate);
 
 
@@ -91,8 +95,8 @@ public class DateTimePicker extends ModalDialog {
         timeLayout.getWheelViewSecond().setLayoutParams(paramsSecond);
 
         LinearLayout.LayoutParams paramsTime = new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1F);
-        paramsTime.leftMargin = DensityUtils.dip2px(activity, 5);
-        paramsTime.rightMargin = DensityUtils.dip2px(activity, 5);
+        paramsTime.leftMargin = WheelDensityUtils.dip2px(activity, 5);
+        paramsTime.rightMargin = WheelDensityUtils.dip2px(activity, 5);
         dateTimeLayout.addView(timeLayout, paramsTime);
 
         return dateTimeLayout;
@@ -101,7 +105,7 @@ public class DateTimePicker extends ModalDialog {
     @Override
     protected void initView() {
         super.initView();
-        titleView.setText("日期选择");
+        titleTextView.setText("日期选择");
     }
 
     @Override
@@ -110,7 +114,7 @@ public class DateTimePicker extends ModalDialog {
     }
 
     @Override
-    protected void onOk() {
+    protected void onConfirm() {
         if (onDateTimePickedListener != null) {
             int year = dateLayout.getSelectYear();
             int month = dateLayout.getSelectMonth();

@@ -3,10 +3,10 @@ package com.Jfpicker.wheelpicker.wheelview;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.util.Log;
 
-import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
+import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 
 
 /**
@@ -15,153 +15,121 @@ import com.Jfpicker.wheelpicker.picker_base.WheelFormatter;
  */
 
 class SimpleWheelDecoration extends WheelDecoration {
-    /**
-     * 文字颜色，选中文字颜色
-     */
-    private int textColor, textColorCenter;
-    /**
-     * 文字是否加粗，选中文字是否加粗
-     */
-    private boolean isTextBlod, isCenterTextBlod;
 
-    /**
-     * 文字大小
-     */
-    private float textSize;
-    /**
-     * 是否文字大小渐变
-     */
-    private boolean textSizeGradient;
-    /**
-     * 支持文字渐变时最小的文字大小
-     */
-    private float minGradientTextSize;
-    /**
-     * 文字位置
-     */
-    private int gravity_text;
 
-    /**
-     * 选中区域大小
-     */
-    private int dividerSize;
+    private WheelAttrs attrs;
 
-    private float textHeight;
     /**
      * 文字画笔
      */
-    private Paint paint, dividerPaint;
+    private Paint paint, dividerPaint, dividerBgPaint;
 
     /**
      * Adapter
      */
     private WheelViewAdapter adapter;
 
-    /**
-     * 显示文字格式化
-     */
-    private WheelFormatter formatter;
 
-    public static String ELLIPSISTEXT = "...";
+    public static String ELLIPSIS_TEXT = "...";
 
 
-    public void setFormatter(WheelFormatter formatter) {
-        this.formatter = formatter;
+    public void setFormatter(WheelFormatListener formatter) {
+        attrs.setFormatter(formatter);
     }
 
-    SimpleWheelDecoration(WheelViewAdapter adapter, WheelFormatter formatter, int gravity, float gravityCoefficient, boolean isWheel,
-                          int gravity_text, int textColor, int textColorCenter, float textSize, int dividerColor, int dividerSize,
-                          float itemDegreeTotal, boolean alphaGradient, boolean isTextBlod, boolean isCenterTextBlod,
-                          boolean textSizeGradient, float minGradientTextSize) {
-        super(adapter.itemCount, adapter.itemSize, gravity, gravityCoefficient, isWheel, itemDegreeTotal, alphaGradient);
-
-        this.formatter = formatter;
-        this.gravity_text = gravity_text;
-        this.textColor = textColor;
-        this.textColorCenter = textColorCenter;
-        this.dividerSize = dividerSize;
+    SimpleWheelDecoration(WheelViewAdapter adapter, WheelAttrs attrs) {
+        super(attrs);
+        this.attrs = attrs;
         this.adapter = adapter;
-        this.isTextBlod = isTextBlod;
-        this.isCenterTextBlod = isCenterTextBlod;
-        this.textSize = textSize;
-        this.textSizeGradient = textSizeGradient;
-        this.minGradientTextSize = minGradientTextSize;
+        initPaint();
+    }
 
-        this.paint = new Paint();
+    private void initPaint() {
+        paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setTextSize(textSize);
+        paint.setTextSize(attrs.getTextSize());
         paint.setTextAlign(Paint.Align.CENTER);
 
         dividerPaint = new Paint();
         dividerPaint.setAntiAlias(true);
-        dividerPaint.setColor(dividerColor);
+        dividerPaint.setStrokeWidth(attrs.getDividerStrokeWidth());
+        dividerPaint.setStyle(Paint.Style.STROKE);
+        dividerPaint.setColor(attrs.getDividerColor());
 
+        dividerBgPaint = new Paint();
+        dividerBgPaint.setAntiAlias(true);
+        dividerBgPaint.setStyle(Paint.Style.FILL);
+        dividerBgPaint.setColor(attrs.getDividerBgColor());
     }
 
-
     @Override
-    void drawItem(Canvas c, Rect rect, int position, int alpha, boolean isCenterItem, boolean isVertical, float textSizeP) {
-
-        paint.setColor(isCenterItem ? textColorCenter : textColor);
+    void drawItem(Canvas c, Rect rect, int itemRealPosition, int centerRealPosition) {
+        boolean isCenterItem = itemRealPosition == centerRealPosition;
+        int formatPosition = centerRealPosition - itemRealPosition;
+        paint.setColor(isCenterItem ? attrs.getCheckedTextColor() : attrs.getTextColor());
         if (isCenterItem) {
-            paint.setTypeface(isCenterTextBlod ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            paint.setTypeface(attrs.isCheckedTextBold() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         } else {
-            paint.setTypeface(isTextBlod ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            paint.setTypeface(attrs.isTextBold() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         }
-
-        paint.setAlpha(alpha);
-        float realTextSize = textSize;
-        if (textSizeGradient) {
-            realTextSize = minGradientTextSize + ((textSize - minGradientTextSize) * textSizeP);
+        if (attrs.getAlphaFormat() != null) {
+            paint.setAlpha(attrs.getAlphaFormat().onGradient(formatPosition));
         }
-        paint.setTextSize(realTextSize);
+        if (attrs.getTextSizeFormat() != null) {
+            paint.setTextSize(attrs.getTextSizeFormat().onFormat(attrs.getCheckedTextSize(), formatPosition));
+        } else {
+            paint.setTextSize(isCenterItem ? attrs.getCheckedTextSize() : attrs.getTextSize());
+        }
         Paint.FontMetrics fm = paint.getFontMetrics();
-        textHeight = (fm.bottom + fm.top) / 2.0f;
+        float textHeight = (fm.bottom + fm.top) / 2.0f;
 
-
-        String s = adapter.getItemString(position).toString();
-        if (formatter != null) {
-            s = formatter.formatItem(adapter.getItemString(position));
+        String itemContentStr = adapter.getItemString(itemRealPosition).toString();
+        if (attrs.getFormatter() != null) {
+            itemContentStr = attrs.getFormatter().formatItem(adapter.getItemString(itemRealPosition));
         }
-        String ellipsisText = getEllipsisText(s, rect);
-        if (!s.equals(ellipsisText)) {
-            s = getEllipsisAppendText(ellipsisText, rect) + ELLIPSISTEXT;
+        String ellipsisText = getEllipsisText(itemContentStr, rect);
+        if (!itemContentStr.equals(ellipsisText)) {
+            itemContentStr = getEllipsisAppendText(ellipsisText, rect) + ELLIPSIS_TEXT;
         }
-
-        if (gravity_text == GRAVITY_LEFT) {
-            //在rect区域内画左边居中文字
-            c.drawText(s, 0, rect.exactCenterY() - textHeight, paint);
-        } else if (gravity_text == GRAVITY_RIGHT) {
-            Rect rect_text = new Rect();
-            paint.getTextBounds(s, 0, s.length(), rect_text);
-            int width = rect.width();//文字宽
-            //在rect区域内画右边居中文字
-            c.drawText(s, rect.width() - width, rect.exactCenterY() - textHeight, paint);
-        } else {
-            //在rect区域内画居中文字
-            c.drawText(s, rect.exactCenterX(), rect.exactCenterY() - textHeight, paint);
-        }
-
+        c.drawText(itemContentStr, rect.exactCenterX(), rect.exactCenterY() - textHeight, paint);
     }
 
     @Override
-    void drawDivider(Canvas c, Rect rect, boolean isVertical) {
-        if (isVertical) {
-            float dividerOff = (rect.height() - dividerSize) / 2.0f;
-            float firstY = rect.top + dividerOff;
-            c.drawLine(rect.left, firstY, rect.right, firstY, dividerPaint);
-            float secondY = rect.bottom - dividerOff;
-            c.drawLine(rect.left, secondY, rect.right, secondY, dividerPaint);
+    void drawDividerBg(Canvas c, Rect rect) {
+        float dividerOff = (rect.height() - attrs.getDividerSize()) / 2.0f;
+        float firstY = rect.top + dividerOff;
+        float secondY = rect.bottom - dividerOff;
+        RectF rectF;
+        if (WheelAttrs.DIVIDER_RECTANGLE == attrs.getDividerType()) {
+            rectF = new RectF(rect.left + attrs.getDividerStrokeWidth(),
+                    firstY + attrs.getDividerStrokeWidth(),
+                    rect.right - attrs.getDividerStrokeWidth(),
+                    secondY - attrs.getDividerStrokeWidth());
         } else {
-            float dividerOff = (rect.width() - dividerSize) / 2.0f;
-            float firstX = rect.left + dividerOff;
-            c.drawLine(firstX, rect.top, firstX, rect.bottom, dividerPaint);
-            float secondX = rect.right - dividerOff;
-            c.drawLine(secondX, rect.top, secondX, rect.bottom, dividerPaint);
+            rectF = new RectF(rect.left, firstY, rect.right, secondY);
+        }
+
+        c.drawRoundRect(rectF, attrs.getDividerCorner(), attrs.getDividerCorner(), dividerBgPaint);
+    }
+
+    @Override
+    void drawDivider(Canvas c, Rect rect) {
+        float dividerOff = (rect.height() - attrs.getDividerSize()) / 2.0f;
+        float firstY = rect.top + dividerOff;
+        float secondY = rect.bottom - dividerOff;
+        if (WheelAttrs.DIVIDER_RECTANGLE == attrs.getDividerType()) {
+            RectF rectF = new RectF(rect.left + attrs.getDividerStrokeWidth(),
+                    firstY + attrs.getDividerStrokeWidth(),
+                    rect.right - attrs.getDividerStrokeWidth(),
+                    secondY - attrs.getDividerStrokeWidth());
+            c.drawRoundRect(rectF, attrs.getDividerCorner(), attrs.getDividerCorner(), dividerPaint);
+        } else {
+            c.drawLine(rect.left, firstY, rect.right, firstY, dividerPaint);
+            c.drawLine(rect.left, secondY, rect.right, secondY, dividerPaint);
         }
     }
 
-    //非常简单的计算了省略号的显示
+    // 每次减少两个字符，简单的计算一下是否需要显示省略号
     public String getEllipsisText(String text, Rect rect) {
         if (paint.measureText(text) - (rect.right - rect.left) > 0) {
             int length = text.length();
@@ -177,7 +145,7 @@ class SimpleWheelDecoration extends WheelDecoration {
     }
 
     public String getEllipsisAppendText(String text, Rect rect) {
-        if (paint.measureText(text + ELLIPSISTEXT) - (rect.right - rect.left) > 0) {
+        if (paint.measureText(text + ELLIPSIS_TEXT) - (rect.right - rect.left) > 0) {
             int length = text.length();
             if (length > 3) {
                 String subText = text.substring(0, length - 2);

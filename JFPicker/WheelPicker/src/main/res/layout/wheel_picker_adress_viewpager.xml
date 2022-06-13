@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayoutAdress"
+        android:id="@+id/tbAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -17,10 +17,10 @@
         app:tabPaddingStart="10dp"
         app:tabRippleColor="@null"
         app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextColor="@color/picker_text_color" />
+        app:tabTextColor="@color/jf_text_color" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpagerAdress"
+        android:id="@+id/vpAddress"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
 

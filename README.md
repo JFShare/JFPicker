@@ -25,7 +25,7 @@
        NetRequestPicker
 
 使用：jitpack
-   maven { url 'https://jitpack.io' }
+   maven { url 'https://jitpack.io' }  
    implementation 'com.github.JFShare:JFPicker:Tag'
    
 # 使用的其他开源库

@@ -24,6 +24,10 @@
     6. 地址选择 AddressPicker 、ViewPager样式的地址选择 AddressViewPagerPicker、 ViewPager样式的五级选择
        NetRequestPicker
 
+使用：jitpack
+   maven { url 'https://jitpack.io' }
+   implementation 'com.github.JFShare:JFPicker:Tag'
+   
 # 使用的其他开源库
 
 **Android轮子哥的开源 https://github.com/getActivity**

@@ -10,6 +10,7 @@
         <attr name="itemDegreeTotal" format="float" />
         <attr name="halfItemCount" format="integer" />
         <attr name="wheelItemSize" format="dimension" />
+        <attr name="isLoop" format="boolean" />
 
         <!-- 文字  -->
         <attr name="wheelTextColor" format="color" />

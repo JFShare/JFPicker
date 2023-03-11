@@ -45,6 +45,8 @@ public class WheelAttrs {
          或者 设置 translateYZ=false 取消画布Y轴Z轴偏移，取消画布Y轴Z轴偏移会对滚轮的立体视觉效果产生影响
      */
     private int itemSize = DEFAULT_SIZE;
+    //是否开启数据无限循环
+    private boolean isLoop;
 
     /*
      * 滚轮字体相关==========================
@@ -149,6 +151,14 @@ public class WheelAttrs {
 
     public void setItemSize(int itemSize) {
         this.itemSize = itemSize;
+    }
+
+    public boolean isLoop() {
+        return isLoop;
+    }
+
+    public void setLoop(boolean loop) {
+        isLoop = loop;
     }
 
     public int getTextColor() {

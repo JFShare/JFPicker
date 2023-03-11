@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 class WheelViewAdapter extends RecyclerView.Adapter<WheelViewAdapter.WheelViewHolder> {
 
     WheelDataAbstractAdapter adapter;
-    private WheelAttrs attrs;
+    private final WheelAttrs attrs;
 
     WheelViewAdapter(WheelAttrs attrs) {
         this.attrs = attrs;
@@ -22,7 +22,11 @@ class WheelViewAdapter extends RecyclerView.Adapter<WheelViewAdapter.WheelViewHo
 
     @Override
     public int getItemCount() {
-        return attrs.getHalfItemCount() * 2 + (adapter == null ? 0 : adapter.getItemCount());
+        if (attrs.isLoop()) {
+            return adapter.getItemCount();
+        } else {
+            return attrs.getHalfItemCount() * 2 + (adapter == null ? 0 : adapter.getItemCount());
+        }
     }
 
     @NonNull
@@ -40,7 +44,7 @@ class WheelViewAdapter extends RecyclerView.Adapter<WheelViewAdapter.WheelViewHo
     }
 
 
-    class WheelViewHolder extends RecyclerView.ViewHolder {
+    static class WheelViewHolder extends RecyclerView.ViewHolder {
         WheelViewHolder(View itemView) {
             super(itemView);
         }

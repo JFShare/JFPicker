@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Jfpicker.wheelpicker.R;
 import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
+import com.Jfpicker.wheelpicker.wheelview.layoutmanager.LayoutManagerScrollEngine;
+import com.Jfpicker.wheelpicker.wheelview.layoutmanager.VerticalLooperLayoutManager;
+import com.Jfpicker.wheelpicker.wheelview.layoutmanager.WheelLinearLayoutManager;
 import com.Jfpicker.wheelpicker.wheelview.listener.OnWheelScrollListener;
 
 /**
@@ -30,16 +32,19 @@ public class WheelView extends FrameLayout {
 
     private WheelAttrs wheelAttrs = WheelAttrs.getDefault();
 
-    /**
-     * recyclerView
-     */
     private CScrollRecyclerView mRecyclerView;
-    private LinearLayoutManager layoutManager;
-    private SimpleWheelDecoration wheelDecoration; //RecyclerView.ItemDecoration
-    private WheelViewAdapter wheelAdapter; // RecyclerView.Adapter
+    //LayoutManager
+    private LayoutManagerScrollEngine scrollEngine;
+    private WheelLinearLayoutManager linearLayoutManager;
+    private VerticalLooperLayoutManager looperLayoutManager;
+    //装饰器
+    private WheelDecoration wheelDecoration;
+    //数据适配器
+    private WheelViewAdapter wheelAdapter;
     private WheelDataAbstractAdapter abstractAdapter;
     private WheelViewObserver observer;
 
+    //滚动与选中
     private int mState = RecyclerView.SCROLL_STATE_IDLE;
     private int dataPosition = IDLE_POSITION;
     private OnWheelScrollListener listener;
@@ -69,7 +74,7 @@ public class WheelView extends FrameLayout {
             wheelAttrs.setHalfItemCount(a.getInt(R.styleable.WheelView_halfItemCount, 3));
             wheelAttrs.setItemSize(a.getDimensionPixelOffset(R.styleable.WheelView_wheelItemSize,
                     WheelAttrs.DEFAULT_SIZE));
-
+            wheelAttrs.setLoop(a.getBoolean(R.styleable.WheelView_isLoop, false));
 
             wheelAttrs.setTextColor(a.getColor(R.styleable.WheelView_wheelTextColor,
                     WheelAttrs.DEFAULT_TEXT_COLOR));
@@ -97,14 +102,21 @@ public class WheelView extends FrameLayout {
         initRecyclerView(context);
     }
 
+    //初始化列表
     private void initRecyclerView(Context context) {
         removeAllViews();
         mRecyclerView = new CScrollRecyclerView(context);
         mRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        if (wheelAttrs.isLoop()) {
+            looperLayoutManager = new VerticalLooperLayoutManager(mRecyclerView, wheelAttrs.getItemSize());
+            scrollEngine = looperLayoutManager;
+            mRecyclerView.setLayoutManager(looperLayoutManager);
+        } else {
+            linearLayoutManager = new WheelLinearLayoutManager(context);
+            scrollEngine = linearLayoutManager;
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        }
         int totalItemSize = (wheelAttrs.getHalfItemCount() * 2 + 1) * wheelAttrs.getItemSize();
-        layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
         //让滑动结束时都能定到中心位置
         new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -112,7 +124,7 @@ public class WheelView extends FrameLayout {
         this.addView(mRecyclerView, params);
 
         wheelAdapter = new WheelViewAdapter(wheelAttrs);
-        wheelDecoration = new SimpleWheelDecoration(wheelAdapter, wheelAttrs);
+        wheelDecoration = new WheelDecoration(wheelAdapter, wheelAttrs);
         mRecyclerView.addItemDecoration(wheelDecoration);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -130,6 +142,7 @@ public class WheelView extends FrameLayout {
         mRecyclerView.setAdapter(wheelAdapter);
     }
 
+    //设置数据源
     public void setAdapter(WheelDataAbstractAdapter adapter) {
         if (abstractAdapter != null) {
             abstractAdapter.setWheelViewObserver(null);
@@ -146,34 +159,49 @@ public class WheelView extends FrameLayout {
         }
     }
 
-
+    //数据源发生变化
     @SuppressLint("NotifyDataSetChanged")
     private void dataSetChanged() {
+        if (wheelAttrs.isLoop()) {
+            looperLayoutManager.setDataCount(wheelAdapter.getItemCount());
+        }
         wheelAdapter.notifyDataSetChanged();
     }
 
+    //设置选中项
     public void setCurrentItem(int position) {
-        layoutManager.scrollToPositionWithOffset(position, 0);
+        scrollEngine.scrollToTargetPosition(position);
         dataPosition = position;
     }
 
+    //获取当前的选中项
     public int getCurrentItem() {
-        int adapterCount = layoutManager.getItemCount();
-        if (wheelDecoration.centerRealPosition >= adapterCount)
-            return 0;
-        int wheelCount = adapterCount - wheelAttrs.getHalfItemCount() * 2;
-        if (wheelDecoration.centerRealPosition >= wheelCount) {
-            return wheelCount - 1;
+        if (wheelAttrs.isLoop()) {
+            return wheelDecoration.centerRealPosition;
+        } else {
+            int adapterCount = linearLayoutManager.getItemCount();
+            if (wheelDecoration.centerRealPosition >= adapterCount)
+                return 0;
+            int wheelCount = adapterCount - wheelAttrs.getHalfItemCount() * 2;
+            if (wheelDecoration.centerRealPosition >= wheelCount) {
+                return wheelCount - 1;
+            }
+            return wheelDecoration.centerRealPosition;
         }
-        return wheelDecoration.centerRealPosition;
     }
 
+
+    //获取RecyclerView
+    private RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
 
     //获取当前的滚轮样式
     public WheelAttrs getAttrs() {
         return wheelAttrs;
     }
 
+    //当前的滚轮样式发生变化后，更新视图
     public void updateAttrs() {
         setAttrs(wheelAttrs);
     }
@@ -184,28 +212,29 @@ public class WheelView extends FrameLayout {
             return;
         }
         if (attrs != null) {
-            if (mRecyclerView != null && layoutManager != null
-                    && wheelAdapter != null && wheelDecoration != null) {
-                wheelAttrs = attrs;
-                initRecyclerView(getContext());
-                if (abstractAdapter != null) {
-                    wheelAdapter.adapter = abstractAdapter;
-                    dataSetChanged();
-                    if (abstractAdapter.getItemCount() <= 0) {
-                        return;
-                    }
-                    if (dataPosition > IDLE_POSITION && dataPosition < abstractAdapter.getItemCount()) {
-                        setCurrentItem(dataPosition);
-                    }
+//            if (mRecyclerView != null && wheelAdapter != null && wheelDecoration != null) {
+            wheelAttrs = attrs;
+            initRecyclerView(getContext());
+            if (abstractAdapter != null) {
+                wheelAdapter.adapter = abstractAdapter;
+                dataSetChanged();
+                if (abstractAdapter.getItemCount() <= 0) {
+                    return;
+                }
+                if (dataPosition > IDLE_POSITION && dataPosition < abstractAdapter.getItemCount()) {
+                    setCurrentItem(dataPosition);
                 }
             }
+//            }
         }
     }
 
+    //设置滚动状态和选中监听
     public void setOnWheelScrollListener(OnWheelScrollListener listener) {
         this.listener = listener;
     }
 
+    //设置数据源格式化
     public void setFormatter(WheelFormatListener formatter) {
         if (wheelAttrs != null) {
             wheelAttrs.setFormatter(formatter);
@@ -233,6 +262,5 @@ public class WheelView extends FrameLayout {
             dataSetChanged();
         }
     }
-
 
 }

@@ -16,16 +16,33 @@
 
     </com.Jfpicker.wheelpicker.wheelview.WheelView>
 
-    <TextView
-        android:id="@+id/tvCurrent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:textColor="@color/jf_text_color"
-        android:textSize="16sp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    </TextView>
+        <TextView
+            android:id="@+id/tvCurrent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/jf_text_color"
+            android:textSize="16sp">
+
+        </TextView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:id="@+id/btnChangeDataSource"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/white"
+            android:text="更换数据源"
+            android:layout_height="wrap_content">
+
+        </Button>
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -85,6 +102,47 @@
                         android:id="@+id/rbIsNotWheel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="否">
+
+                    </RadioButton>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数据无限循环："
+                    android:textColor="@color/jf_text_color"
+                    android:textSize="16sp">
+
+                </TextView>
+
+                <RadioGroup
+                    android:id="@+id/rgIsLoop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbIsLoop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="是">
+
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/rbIsNotLoop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="否">
 
                     </RadioButton>

@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author Created by JF on  2021/11/10
  * @description 继承自RecyclerView.ItemDecoration的抽象类，实现了3D滚轮的效果
  */
-abstract class WheelDecoration extends RecyclerView.ItemDecoration {
+abstract class AbstractWheelDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * 无效的位置
@@ -41,7 +41,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
     int centerRealPosition = IDLE_POSITION;
 
 
-    WheelDecoration(WheelAttrs attrs) {
+    AbstractWheelDecoration(WheelAttrs attrs) {
         this.attrs = attrs;
         this.haltItemDegreeTotal = attrs.getItemDegreeTotal() / 2;
         this.halfItemHeight = attrs.getItemSize() / 2.0f;
@@ -94,7 +94,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
                 Rect itemRect = new Rect(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 //绘制滚轮项
                 drawWheel(c, itemRect, itemPosition - attrs.getHalfItemCount(),
-                        parentRect.exactCenterX(), parentRect.exactCenterY(), centerRealPosition - itemPosition);
+                        parentRect.exactCenterX(), parentRect.exactCenterY(), centerRealPosition + attrs.getHalfItemCount() - itemPosition);
             }
         } else if (parent.getLayoutManager() instanceof VerticalLooperLayoutManager) {
             VerticalLooperLayoutManager vlM = (VerticalLooperLayoutManager) parent.getLayoutManager();
@@ -136,7 +136,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
      * adapterPosition 当前列表项对应的数据源位置
      * centerOffset 居中列表列表项位置 - 当前列表项位置
      */
-    void drawWheel(Canvas c, Rect rect, int adapterPosition, float parentCenterX, float parentCenterY,int centerOffset) {
+    void drawWheel(Canvas c, Rect rect, int adapterPosition, float parentCenterX, float parentCenterY, int centerOffset) {
 
         float itemCenterY = rect.exactCenterY();
         float scrollOffY = itemCenterY - parentCenterY;
@@ -172,7 +172,7 @@ abstract class WheelDecoration extends RecyclerView.ItemDecoration {
     /**
      * 画item,  如何画法可以在此方法中实现
      */
-    abstract void drawItem(Canvas c, Rect rect, int itemRealPosition,int centerOffset);
+    abstract void drawItem(Canvas c, Rect rect, int adapterPosition, int centerOffset);
 
     /**
      * 画分割线背景 如何画法可以在此方法中实现

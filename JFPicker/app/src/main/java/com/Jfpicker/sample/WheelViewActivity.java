@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ public class WheelViewActivity extends AppCompatActivity {
     }
 
     private WheelView wheelView;
+    private boolean isCityData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +45,9 @@ public class WheelViewActivity extends AppCompatActivity {
     }
 
     private void initWheelView() {
-        ArrayList<String> strList = new ArrayList<>();
-        strList.add("北京市");
-        strList.add("天津市");
-        strList.add("河北省");
-        strList.add("山西省");
-        strList.add("内蒙古自治区");
-        strList.add("辽宁省");
-        strList.add("吉林省");
-        strList.add("黑龙江省");
-        strList.add("上海市");
-        strList.add("江苏省");
         WheelDataAdapter adapter = new WheelDataAdapter();
         adapter.objects.clear();
-        adapter.objects.addAll(strList);
+        adapter.objects.addAll(getCityData());
         wheelView.setAdapter(adapter);
         wheelView.setCurrentItem(5);
         TextView tvCurrent = findViewById(R.id.tvCurrent);
@@ -76,6 +68,21 @@ public class WheelViewActivity extends AppCompatActivity {
                 tvCurrent.setText("当前选中：" + adapter.objects.get(wheelView.getCurrentItem()).toString());
             }
         });
+
+        Button btnChangeDataSource = findViewById(R.id.btnChangeDataSource);
+        btnChangeDataSource.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.objects.clear();
+                if (isCityData){
+                    adapter.objects.addAll(getNumberData());
+                }else {
+                    adapter.objects.addAll(getCityData());
+                }
+                adapter.notifyDataSetChanged();
+                isCityData=!isCityData;
+            }
+        });
     }
 
     private void initOp() {
@@ -87,6 +94,17 @@ public class WheelViewActivity extends AppCompatActivity {
             }
             if (R.id.rbIsNotWheel == checkedId) {
                 wheelView.getAttrs().setWheel(false);
+                wheelView.updateAttrs();
+            }
+        });
+        RadioGroup rgIsLoop = findViewById(R.id.rgIsLoop);
+        rgIsLoop.setOnCheckedChangeListener((group, checkedId) -> {
+            if (R.id.rbIsLoop == checkedId) {
+                wheelView.getAttrs().setLoop(true);
+                wheelView.updateAttrs();
+            }
+            if (R.id.rbIsNotLoop == checkedId) {
+                wheelView.getAttrs().setLoop(false);
                 wheelView.updateAttrs();
             }
         });
@@ -211,7 +229,7 @@ public class WheelViewActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    wheelView.getAttrs().setTextSize(Integer.parseInt(s.toString()));
+                    wheelView.getAttrs().setTextSize(Float.parseFloat(s.toString()));
                     wheelView.updateAttrs();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -235,7 +253,7 @@ public class WheelViewActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    wheelView.getAttrs().setCheckedTextSize(Integer.parseInt(s.toString()));
+                    wheelView.getAttrs().setCheckedTextSize(Float.parseFloat(s.toString()));
                     wheelView.updateAttrs();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -295,7 +313,7 @@ public class WheelViewActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    wheelView.getAttrs().setDividerSize(Integer.parseInt(s.toString()));
+                    wheelView.getAttrs().setDividerSize(Float.parseFloat(s.toString()));
                     wheelView.updateAttrs();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -441,5 +459,28 @@ public class WheelViewActivity extends AppCompatActivity {
         public String formatItem(@NonNull Object item) {
             return item + "自定义后缀";
         }
+    }
+
+    private ArrayList<String> getCityData(){
+        ArrayList<String> strList = new ArrayList<>();
+        strList.add("北京市");
+        strList.add("天津市");
+        strList.add("河北省");
+        strList.add("山西省");
+        strList.add("内蒙古自治区");
+        strList.add("辽宁省");
+        strList.add("吉林省");
+        strList.add("黑龙江省");
+        strList.add("上海市");
+        strList.add("江苏省");
+        return strList;
+    }
+    private ArrayList<String> getNumberData(){
+        ArrayList<String> strList = new ArrayList<>();
+        strList.add("11");
+        strList.add("22");
+        strList.add("33");
+        strList.add("44");
+        return strList;
     }
 }

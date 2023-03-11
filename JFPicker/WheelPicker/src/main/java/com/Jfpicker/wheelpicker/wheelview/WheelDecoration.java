@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 
@@ -14,7 +15,7 @@ import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
  * @description 继承自WheelDecoration，主要实现绘制文字效果。
  */
 
-class SimpleWheelDecoration extends WheelDecoration {
+class WheelDecoration extends AbstractWheelDecoration {
 
 
     private WheelAttrs attrs;
@@ -37,7 +38,7 @@ class SimpleWheelDecoration extends WheelDecoration {
         attrs.setFormatter(formatter);
     }
 
-    SimpleWheelDecoration(WheelViewAdapter adapter, WheelAttrs attrs) {
+    WheelDecoration(WheelViewAdapter adapter, WheelAttrs attrs) {
         super(attrs);
         this.attrs = attrs;
         this.adapter = adapter;
@@ -64,7 +65,8 @@ class SimpleWheelDecoration extends WheelDecoration {
 
 
     @Override
-    void drawItem(Canvas c, Rect rect,  int itemRealPosition,int centerOffset) {
+    void drawItem(Canvas c, Rect rect,  int adapterPosition,int centerOffset) {
+        Log.e("偏移量",centerOffset+"");
         boolean isCenterItem = centerOffset==0;
         paint.setColor(isCenterItem ? attrs.getCheckedTextColor() : attrs.getTextColor());
         if (isCenterItem) {
@@ -83,9 +85,9 @@ class SimpleWheelDecoration extends WheelDecoration {
         Paint.FontMetrics fm = paint.getFontMetrics();
         float textHeight = (fm.bottom + fm.top) / 2.0f;
 
-        String itemContentStr = adapter.getItemString(itemRealPosition).toString();
+        String itemContentStr = adapter.getItemString(adapterPosition).toString();
         if (attrs.getFormatter() != null) {
-            itemContentStr = attrs.getFormatter().formatItem(adapter.getItemString(itemRealPosition));
+            itemContentStr = attrs.getFormatter().formatItem(adapter.getItemString(adapterPosition));
         }
         String ellipsisText = getEllipsisText(itemContentStr, rect);
         if (!itemContentStr.equals(ellipsisText)) {

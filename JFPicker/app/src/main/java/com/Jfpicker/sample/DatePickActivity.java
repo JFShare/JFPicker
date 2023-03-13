@@ -78,6 +78,9 @@ public class DatePickActivity extends AppCompatActivity {
 
         findViewById(R.id.btnYearMonthDay).setOnClickListener(v -> {
             YearMonthDayPicker picker = new YearMonthDayPicker(DatePickActivity.this);
+            //设置数据无限循环效果
+//            picker.getWheelLayout().getWheelViewDay().getAttrs().setLoop(true);
+//            picker.getWheelLayout().getWheelViewDay().updateAttrs();
             picker.setOnDatePickedListener((year, month, day) ->
                     Toast.makeText(DatePickActivity.this,
                             year + "-" + month + "-" + day, Toast.LENGTH_SHORT).show());

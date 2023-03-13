@@ -26,6 +26,7 @@
 
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:id="@+id/ivCancel"
                 android:src="@drawable/calendar_picker_cancel">
 
             </ImageView>
@@ -71,7 +72,7 @@
                 android:gravity="center">
 
                 <ImageView
-
+                    android:id="@+id/ivNext"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@drawable/calendar_picker_next_page" />
@@ -90,8 +91,9 @@
             android:minHeight="40dp">
 
             <ImageView
-                android:layout_width="18dp"
+                android:layout_width="15dp"
                 android:layout_height="18dp"
+                android:id="@+id/ivSure"
                 android:src="@drawable/calendar_picker_sure">
 
             </ImageView>

@@ -95,6 +95,7 @@ public class DefaultRangeMonthView extends RangeMonthView {
     protected void onPreviewHook() {
         mRadius = Math.min(mItemWidth, mItemHeight) / 5 * 2;
         mSchemePaint.setStyle(Paint.Style.STROKE);
+        mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
     }
 
     @Override

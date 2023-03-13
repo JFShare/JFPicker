@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 /**
  * @author Created by JF on  2021/11/10
- * @description 继承自RecyclerView.ItemDecoration的抽象类，实现了3D滚轮的效果
+ * @description 继承自RecyclerView.ItemDecoration的抽象类，主要实现3D滚轮的效果，文字和间隔样式由子类实现
  */
 abstract class AbstractWheelDecoration extends RecyclerView.ItemDecoration {
 

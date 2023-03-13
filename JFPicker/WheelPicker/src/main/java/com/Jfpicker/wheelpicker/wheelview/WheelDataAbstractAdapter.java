@@ -4,7 +4,7 @@ import android.database.DataSetObserver;
 
 /**
  * @author Created by JF on  2022/6/7 10:58
- * @description
+ * @description WheelView 抽象的数据管理类
  */
 
 public abstract class WheelDataAbstractAdapter {

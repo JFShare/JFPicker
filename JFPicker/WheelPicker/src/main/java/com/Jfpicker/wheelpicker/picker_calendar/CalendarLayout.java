@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.Jfpicker.wheelpicker.R;
+import com.Jfpicker.wheelpicker.picker_calendar.annotation.CalendarMode;
 import com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultMultiMonthView;
 import com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultRangeMonthView;
 import com.Jfpicker.wheelpicker.picker_calendar.custom.DefaultSingleMonthView;
@@ -37,14 +38,18 @@ public class CalendarLayout extends LinearLayout {
 
 
     protected LinearLayout llCancel;
+    protected ImageView ivCancel;
     protected LinearLayout llPreMonth;
+    protected ImageView ivPre;
     protected LinearLayout llNextMonth;
+    protected ImageView ivNext;
     protected TextView tvTitle;
     protected LinearLayout llSure;
+    protected ImageView ivSure;
     protected CalendarView mCalendarView;
 
 
-    private int selectMode = 1;
+    private int selectMode = CalendarMode.SINGLE;
     private OnCalendarPickedListener onCalendarPickedListener;
     private OnCalendarMultiPickedListener onCalendarMultiPickedListener;
     private OnCalendarRangePickedListener onCalendarRangePickedListener;
@@ -74,17 +79,24 @@ public class CalendarLayout extends LinearLayout {
         setOrientation(VERTICAL);
         inflate(context, R.layout.picker_calendar_layout, this);
         llCancel = findViewById(R.id.llCancel);
+        ivCancel = findViewById(R.id.ivCancel);
         llPreMonth = findViewById(R.id.llPreMonth);
+        ivPre = findViewById(R.id.ivPre);
         llNextMonth = findViewById(R.id.llNextMonth);
+        ivNext = findViewById(R.id.ivNext);
         tvTitle = findViewById(R.id.tvTitle);
         llSure = findViewById(R.id.llSure);
+        ivSure = findViewById(R.id.ivSure);
         mCalendarView = findViewById(R.id.my_calendar);
 
-        mCalendarView.setOnMonthChangeListener((year, month) ->
-                setTitleText(year, month));
+        mCalendarView.setOnMonthChangeListener(this::setTitleText);
         llPreMonth.setOnClickListener(v -> mCalendarView.scrollToPre());
         llNextMonth.setOnClickListener(v -> mCalendarView.scrollToNext());
-
+        tvTitle.setOnClickListener(v -> {
+            if (onCalendarTitleListener != null) {
+                onCalendarTitleListener.onTitleClick(tvTitle);
+            }
+        });
         llCancel.setOnClickListener(v -> {
             if (onCalendarTitleListener != null) {
                 onCalendarTitleListener.onClose();
@@ -94,19 +106,19 @@ public class CalendarLayout extends LinearLayout {
             if (onCalendarTitleListener != null) {
                 onCalendarTitleListener.onSure();
             }
-            if (selectMode == 1) {
+            if (selectMode == CalendarMode.SINGLE) {
                 //单选
                 if (onCalendarPickedListener != null) {
                     Calendar calendar = mCalendarView.getSelectedCalendar();
                     onCalendarPickedListener.onCalendarPicked(calendar.getYear(), calendar.getMonth(), calendar.getDay());
                 }
-            } else if (selectMode == 3) {
+            } else if (selectMode == CalendarMode.MULTI) {
                 //多选
                 if (onCalendarMultiPickedListener != null) {
                     List<Calendar> list = mCalendarView.getMultiSelectCalendars();
                     onCalendarMultiPickedListener.onCalendarMultiPicked(list);
                 }
-            } else if (selectMode == 2) {
+            } else if (selectMode == CalendarMode.RANGE) {
                 //范围选择
                 if (onCalendarRangePickedListener != null) {
                     List<Calendar> list = mCalendarView.getSelectCalendarRange();
@@ -121,7 +133,7 @@ public class CalendarLayout extends LinearLayout {
 
     //设置单选
     public void setSelectSingleMode() {
-        selectMode = 1;
+        selectMode = CalendarMode.SINGLE;
         mCalendarView.setSelectSingleMode();
         mCalendarView.setMonthView(DefaultSingleMonthView.class);
         mCalendarView.setOnCalendarSelectListener(new CalendarView.OnCalendarSelectListener() {
@@ -140,7 +152,7 @@ public class CalendarLayout extends LinearLayout {
 
     //设置多选
     public void setSelectMultiMode(int size) {
-        selectMode = 3;
+        selectMode = CalendarMode.MULTI;
         mCalendarView.setMaxMultiSelectSize(size);
         mCalendarView.setSelectMultiMode();
         mCalendarView.setMonthView(DefaultMultiMonthView.class);
@@ -165,7 +177,7 @@ public class CalendarLayout extends LinearLayout {
 
     //设置范围选择
     public void setSelectRangeMode() {
-        selectMode = 2;
+        selectMode = CalendarMode.RANGE;
         mCalendarView.setSelectRangeMode();
         mCalendarView.setMonthView(DefaultRangeMonthView.class);
         mCalendarView.setOnCalendarRangeSelectListener(new CalendarView.OnCalendarRangeSelectListener() {
@@ -201,6 +213,10 @@ public class CalendarLayout extends LinearLayout {
         tvTitle.setText(year + "." + mon);
     }
 
+    public void setCalendar(int year, int month, int day) {
+        mCalendarView.scrollToCalendar(year, month, day, false, false);
+        mCalendarView.clearSingleSelect();
+    }
 
     public void setOnCalendarPickedListener(OnCalendarPickedListener onCalendarPickedListener) {
         this.onCalendarPickedListener = onCalendarPickedListener;
@@ -221,5 +237,18 @@ public class CalendarLayout extends LinearLayout {
     public CalendarView getCalendarView() {
         return mCalendarView;
     }
+    public TextView getTvTitle() {
+        return tvTitle;
+    }
+    public ImageView getIvPre() {
+        return ivPre;
+    }
 
+    public ImageView getIvNext() {
+        return ivNext;
+    }
+
+    public ImageView getIvSure() {
+        return ivSure;
+    }
 }

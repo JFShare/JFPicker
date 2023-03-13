@@ -163,7 +163,7 @@ public class WheelView extends FrameLayout {
     @SuppressLint("NotifyDataSetChanged")
     private void dataSetChanged() {
         if (wheelAttrs.isLoop()) {
-            looperLayoutManager.setDataCount(wheelAdapter.getItemCount());
+            looperLayoutManager.setDataCount(wheelAdapter.adapter.getItemCount());
         }
         wheelAdapter.notifyDataSetChanged();
     }
@@ -177,6 +177,10 @@ public class WheelView extends FrameLayout {
     //获取当前的选中项
     public int getCurrentItem() {
         if (wheelAttrs.isLoop()) {
+            int adapterCount = looperLayoutManager.getDataCount();
+            if (wheelDecoration.centerRealPosition >= adapterCount) {
+                return adapterCount - 1;
+            }
             return wheelDecoration.centerRealPosition;
         } else {
             int adapterCount = linearLayoutManager.getItemCount();
@@ -192,7 +196,7 @@ public class WheelView extends FrameLayout {
 
 
     //获取RecyclerView
-    private RecyclerView getRecyclerView() {
+    private CScrollRecyclerView getRecyclerView() {
         return mRecyclerView;
     }
 
@@ -212,7 +216,6 @@ public class WheelView extends FrameLayout {
             return;
         }
         if (attrs != null) {
-//            if (mRecyclerView != null && wheelAdapter != null && wheelDecoration != null) {
             wheelAttrs = attrs;
             initRecyclerView(getContext());
             if (abstractAdapter != null) {
@@ -225,7 +228,6 @@ public class WheelView extends FrameLayout {
                     setCurrentItem(dataPosition);
                 }
             }
-//            }
         }
     }
 

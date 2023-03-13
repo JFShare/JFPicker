@@ -196,7 +196,11 @@ public class VerticalLooperLayoutManager extends RecyclerView.LayoutManager impl
             }
             int lastPos = getPosition(lastView);
 
-            //通过scrollTo方法移动,非平滑的滑动，每次至少平移一个列表项
+            /*
+             * 两种场景：
+             * 1.通过scrollTo方法移动,非平滑的滑动，每次至少平移一个列表项
+             * 2.用户使用手指超快的滑动，一段时间内每次位移都大于一个列表项
+             */
             if (Math.abs(dy) >= itemHeight) {
                 int needAddCount = Math.abs(dy) / itemHeight;
                 if (Math.abs(dy) % itemHeight > 0) {
@@ -224,7 +228,12 @@ public class VerticalLooperLayoutManager extends RecyclerView.LayoutManager impl
                     }
                 }
             }
-//            //通过用户交互或者smoothScrollTo方法移动，平滑的移动，每次移动一点点距离
+
+               /*
+                * 两种场景：
+                * 1. 通过smoothScrollTo方法移动，平滑的移动，每次移动一点点距离
+                * 2. 用户使用手指比较慢的滑动，一段时间内每次位移都小于一个列表项
+                */
 //            //可见的最后一个itemView完全滑进来了，需要补充新的
             else if (lastView.getBottom() < getHeight()) {
                 View scrap;
@@ -249,7 +258,11 @@ public class VerticalLooperLayoutManager extends RecyclerView.LayoutManager impl
             }
             int firstPos = getPosition(firstView);
 
-            //通过scrollTo方法移动,非平滑的滑动，每次至少平移一个列表项
+            /*
+             * 两种场景：
+             * 1.通过scrollTo方法移动,非平滑的滑动，每次至少平移一个列表项
+             * 2.用户使用手指超快的滑动，一段时间内每次位移都大于一个列表项
+             */
             if (Math.abs(dy) >= itemHeight) {
                 int needAddCount = Math.abs(dy) / itemHeight;
                 if (Math.abs(dy) % itemHeight > 0) {
@@ -282,7 +295,11 @@ public class VerticalLooperLayoutManager extends RecyclerView.LayoutManager impl
                     }
                 }
             }
-            //通过用户交互或者smoothScrollTo方法移动，平滑的移动，每次移动一点点距离
+            /*
+             * 两种场景：
+             * 1. 通过smoothScrollTo方法移动，平滑的移动，每次移动一点点距离
+             * 2. 用户使用手指比较慢的滑动，一段时间内每次位移都小于一个列表项
+             */
             else if (firstView.getTop() >= 0) {
                 View scrap;
                 if (firstPos == 0) {

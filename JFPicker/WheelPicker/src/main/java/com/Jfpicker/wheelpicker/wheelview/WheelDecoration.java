@@ -12,7 +12,7 @@ import com.Jfpicker.wheelpicker.wheelview.format.WheelFormatListener;
 
 /**
  * @author Created by JF on  2021/11/10
- * @description 继承自WheelDecoration，主要实现绘制文字效果。
+ * @description 继承自WheelDecoration，主要实现绘制文字效果和间隔样式
  */
 
 class WheelDecoration extends AbstractWheelDecoration {
@@ -66,7 +66,6 @@ class WheelDecoration extends AbstractWheelDecoration {
 
     @Override
     void drawItem(Canvas c, Rect rect,  int adapterPosition,int centerOffset) {
-        Log.e("偏移量",centerOffset+"");
         boolean isCenterItem = centerOffset==0;
         paint.setColor(isCenterItem ? attrs.getCheckedTextColor() : attrs.getTextColor());
         if (isCenterItem) {

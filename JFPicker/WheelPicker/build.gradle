@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace = "com.Jfpicker.wheelpicker"
     compileSdk 30
 
     defaultConfig {

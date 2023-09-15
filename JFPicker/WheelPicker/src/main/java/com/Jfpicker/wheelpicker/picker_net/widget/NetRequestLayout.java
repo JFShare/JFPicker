@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,7 +78,7 @@ public class NetRequestLayout extends LinearLayout {
 
     private void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.wheel_picker_net_request, this);
+        inflate(context, R.layout.jf_wheel_picker_net_request, this);
         onInit();
     }
 

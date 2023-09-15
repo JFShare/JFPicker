@@ -72,7 +72,7 @@ public class HourMinuteSecondWheelLayout extends LinearLayout {
 
     private void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.wheel_picker_time, this);
+        inflate(context, R.layout.jf_wheel_picker_time, this);
         onInit();
     }
 

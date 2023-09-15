@@ -1,10 +1,8 @@
 package com.Jfpicker.wheelpicker.picker_calendar;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +16,6 @@ import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarRangePickedLi
 import com.Jfpicker.wheelpicker.picker_calendar.listener.OnCalendarTitleListener;
 import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
 import com.Jfpicker.wheelpicker.dialog.ModalDialog;
-import com.Jfpicker.wheelpicker.picker_date.YearMonthDayPicker;
 import com.Jfpicker.wheelpicker.picker_date.annotation.DateMode;
 import com.Jfpicker.wheelpicker.picker_date.widget.YearMonthDayWheelLayout;
 
@@ -158,7 +155,7 @@ public class CalendarPicker extends ModalDialog {
 
     private void initYearMonthPopup() {
         if (yearMonthPopup == null) {
-            yearMonthPopup = new BasePopupWindow(activity, R.layout.popup_down_select_calendar);
+            yearMonthPopup = new BasePopupWindow(activity, R.layout.jf_popup_down_select_calendar);
             YearMonthDayWheelLayout wheelViewCalendar = yearMonthPopup.getContentView().findViewById(R.id.wheelViewCalendar);
             wheelViewCalendar.setDateMode(DateMode.YEAR_MONTH);
             TextView tvPickerCancel = yearMonthPopup.getContentView().findViewById(R.id.tvPickerCancel);

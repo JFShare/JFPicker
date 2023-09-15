@@ -44,7 +44,7 @@ public class AddressVpAdapter extends RecyclerView.Adapter<AddressVpAdapter.Addr
     @NonNull
     @Override
     public AddressVpAdapter.AddressVpViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_vp_recyclerview, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.jf_item_vp_recyclerview, parent, false);
         return new AddressVpAdapter.AddressVpViewHolder(view);
     }
 

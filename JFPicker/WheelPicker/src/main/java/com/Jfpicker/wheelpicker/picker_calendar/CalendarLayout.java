@@ -3,10 +3,8 @@ package com.Jfpicker.wheelpicker.picker_calendar;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,7 +75,7 @@ public class CalendarLayout extends LinearLayout {
 
     protected void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.picker_calendar_layout, this);
+        inflate(context, R.layout.jf_picker_calendar_layout, this);
         llCancel = findViewById(R.id.llCancel);
         ivCancel = findViewById(R.id.ivCancel);
         llPreMonth = findViewById(R.id.llPreMonth);

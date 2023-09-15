@@ -58,7 +58,7 @@ public class NetRequestOptionAdapter extends RecyclerView.Adapter<NetRequestOpti
     @NonNull
     @Override
     public NetRequestOptionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_option, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.jf_item_option, parent, false);
         return new NetRequestOptionAdapter.NetRequestOptionViewHolder(view);
     }
 

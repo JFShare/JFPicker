@@ -66,7 +66,7 @@ public class OptionRecyclerViewPicker extends ModalDialog {
     @NonNull
     @Override
     protected View createBodyView() {
-        View view = getLayoutInflater().inflate(R.layout.picker_recyclerview, null, false);
+        View view = getLayoutInflater().inflate(R.layout.jf_picker_recyclerview, null, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         return view;
     }
@@ -74,7 +74,7 @@ public class OptionRecyclerViewPicker extends ModalDialog {
     @Nullable
     @Override
     protected View createFooterView() {
-        return getLayoutInflater().inflate(R.layout.footer_bottom_cancel, null, false);
+        return getLayoutInflater().inflate(R.layout.jf_footer_bottom_cancel, null, false);
     }
 
     @Override

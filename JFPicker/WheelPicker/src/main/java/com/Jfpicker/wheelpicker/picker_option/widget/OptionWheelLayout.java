@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.Jfpicker.wheelpicker.R;
@@ -53,7 +52,7 @@ public class OptionWheelLayout extends LinearLayout {
 
     private void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.wheel_picker_option, this);
+        inflate(context, R.layout.jf_wheel_picker_option, this);
         onInit();
     }
 

@@ -74,7 +74,7 @@ public class YearMonthDayWheelLayout extends LinearLayout {
 
     private void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.wheel_picker_date, this);
+        inflate(context, R.layout.jf_wheel_picker_date, this);
         onInit();
     }
 

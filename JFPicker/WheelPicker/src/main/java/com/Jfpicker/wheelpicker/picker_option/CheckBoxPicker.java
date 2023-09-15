@@ -57,14 +57,14 @@ public class CheckBoxPicker extends ModalDialog {
     @Nullable
     @Override
     public View createTitleView() {
-        return View.inflate(activity, R.layout.titlebar_only_title, null);
+        return View.inflate(activity, R.layout.jf_titlebar_only_title, null);
     }
 
 
     @NonNull
     @Override
     protected View createBodyView() {
-        View view = getLayoutInflater().inflate(R.layout.picker_recyclerview_nobar, null, false);
+        View view = getLayoutInflater().inflate(R.layout.jf_picker_recyclerview_nobar, null, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         setRecyclerViewFixedHeight(250);
         return view;
@@ -73,7 +73,7 @@ public class CheckBoxPicker extends ModalDialog {
     @Nullable
     @Override
     protected View createFooterView() {
-        View view = View.inflate(activity, R.layout.footer_default, null);
+        View view = View.inflate(activity, R.layout.jf_footer_default, null);
         viewBottomSplitLine = view.findViewById(R.id.viewBottomSplitLine);
         viewBtnSplitLine = view.findViewById(R.id.viewBtnSplitLine);
 

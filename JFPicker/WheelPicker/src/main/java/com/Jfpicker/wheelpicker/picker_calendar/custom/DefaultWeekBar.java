@@ -21,7 +21,7 @@ public class DefaultWeekBar extends WeekBar {
 
     public DefaultWeekBar(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.custom_week_bar, this, true);
+        LayoutInflater.from(context).inflate(R.layout.jf_custom_week_bar, this, true);
         setBackgroundColor(Color.WHITE);
     }
 

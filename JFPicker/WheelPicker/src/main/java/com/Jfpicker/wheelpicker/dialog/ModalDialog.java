@@ -118,7 +118,7 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
 
     @Nullable
     public View createTitleView() {
-        return View.inflate(activity, R.layout.titlebar_default, null);
+        return View.inflate(activity, R.layout.jf_titlebar_default, null);
     }
 
     @Nullable

@@ -75,7 +75,7 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.RadioViewHol
     @Override
     public RadioAdapter.RadioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate((layoutResId > 0) ? layoutResId :
-                R.layout.item_radio, parent, false);
+                R.layout.jf_item_radio, parent, false);
         return new RadioAdapter.RadioViewHolder(view);
     }
 

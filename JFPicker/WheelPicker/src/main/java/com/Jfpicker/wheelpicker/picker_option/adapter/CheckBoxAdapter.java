@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Jfpicker.wheelpicker.R;
 import com.Jfpicker.wheelpicker.picker_option.entity.OptionEntity;
-import com.Jfpicker.wheelpicker.rv_listener.OnItemClickListener;
 import com.Jfpicker.wheelpicker.rv_listener.OnRecyclerviewStyleListener;
 
 import java.util.List;
@@ -70,7 +69,7 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.CheckB
     @Override
     public CheckBoxAdapter.CheckBoxViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate((layoutResId > 0) ? layoutResId :
-                R.layout.item_checkbox, parent, false);
+                R.layout.jf_item_checkbox, parent, false);
         return new CheckBoxAdapter.CheckBoxViewHolder(view);
     }
 

@@ -1,7 +1,6 @@
 package com.Jfpicker.wheelpicker.picker_adress.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,7 @@ public class AddressItemAdapter extends RecyclerView.Adapter<AddressItemAdapter.
     @NonNull
     @Override
     public AddressItemAdapter.AddressItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_option, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.jf_item_option, parent, false);
         return new AddressItemAdapter.AddressItemViewHolder(view);
     }
 

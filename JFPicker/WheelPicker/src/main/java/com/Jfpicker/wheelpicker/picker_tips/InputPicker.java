@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +12,6 @@ import androidx.annotation.StyleRes;
 import com.Jfpicker.wheelpicker.R;
 import com.Jfpicker.wheelpicker.dialog.ModalDialog;
 import com.Jfpicker.wheelpicker.dialog.config.DialogConfig;
-import com.Jfpicker.wheelpicker.picker_tips.listener.OnConfirmCancelListener;
 import com.Jfpicker.wheelpicker.picker_tips.listener.OnInputListener;
 
 /**
@@ -64,13 +62,13 @@ public class InputPicker extends ModalDialog {
     @Nullable
     @Override
     public View createTitleView() {
-        return View.inflate(activity, R.layout.titlebar_only_title, null);
+        return View.inflate(activity, R.layout.jf_titlebar_only_title, null);
     }
 
     @NonNull
     @Override
     protected View createBodyView() {
-        View view = View.inflate(activity, R.layout.picker_edit_layout, null);
+        View view = View.inflate(activity, R.layout.jf_picker_edit_layout, null);
         etContent = view.findViewById(R.id.etContent);
         return view;
     }
@@ -79,7 +77,7 @@ public class InputPicker extends ModalDialog {
     @Nullable
     @Override
     protected View createFooterView() {
-        View view = View.inflate(activity, R.layout.footer_default, null);
+        View view = View.inflate(activity, R.layout.jf_footer_default, null);
         View viewBottomSplitLine = view.findViewById(R.id.viewBottomSplitLine);
         View viewBtnSplitLine = view.findViewById(R.id.viewBtnSplitLine);
         viewBottomSplitLine.setBackgroundColor((dialogConfig != null) ?

@@ -9,7 +9,6 @@ import static com.Jfpicker.wheelpicker.picker_option.entity.LinkageProvider.INDE
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -74,7 +73,7 @@ public class AddressViewPagerLayout extends LinearLayout {
 
     private void init(Context context) {
         setOrientation(VERTICAL);
-        inflate(context, R.layout.wheel_picker_adress_viewpager, this);
+        inflate(context, R.layout.jf_wheel_picker_adress_viewpager, this);
         onInit();
     }
 

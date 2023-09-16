@@ -11,11 +11,14 @@ AndroidPicker功能强大，但有一些地方不符合公司的开发要求并�
 引入依赖：
 
 ```java
-jitpack maven {
-    url 'https://jitpack.io' 
-}
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 
-implementation 'com.github.JFShare:JFPicker:2.1'
+implementation 'com.github.JFShare:JFPicker:2.3'
 ```
 
 使用 RecyclerView + RecyclerView.ItemDecoration 替换了AndroidPicker的核心滚轮控件，提供更好的滚轮3D效果和滚动体验。
